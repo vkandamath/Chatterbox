@@ -1,8 +1,12 @@
 var socket = io();
 
-$("#message-form").submit(function(e) {
-	e.preventDefault();
-});
+window.onload = function() {
+	$("#message").keypress(function (e) {
+		if (e.which == 13) {
+			sendMessage();
+		}
+	});
+}
 
 socket.on('connected', function(msg) {
 	$("#messages ul").append("<li><font color='green'>User " + msg.userid + "has connected.</font></li>");
@@ -24,7 +28,7 @@ socket.on('incoming message', function(msg){
 
 function sendMessage() {
 	var message = $("#message").val();
-	
+
 	if (message != '') {
 		$("#message").val('');
    		socket.emit('outgoing message', {message: message, userid: socket.id});

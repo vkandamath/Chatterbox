@@ -17,7 +17,7 @@ socket.on('myUserId', function(msg) {
 })
 
 socket.on('disconnected', function(msg) {
-	$("#messages ul").append("<li>User " + msg.userid + "has disconnected.</li>");
+	$("#messages ul").append("<li><li><font color='red'>User " + msg.userid + "has disconnected.</font></li>");
 });
 
 socket.on('incoming message', function(msg){

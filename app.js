@@ -7,7 +7,7 @@ var io = require('socket.io')(server);
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-server.listen(3000, function(){
+server.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
 

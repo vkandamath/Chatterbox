@@ -1,11 +1,15 @@
 // Server side script
-var express = require('express')
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var express = require('express');
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+server.listen(3000, function(){
+  console.log('listening on *:3000');
+});
 
 app.get('/', function (req, res) {
 
@@ -28,9 +32,4 @@ io.on('connection', function(socket) {
 		console.log("received: " + msg);
 		io.emit('incoming message', msg);
 	});
-});
-
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
 });

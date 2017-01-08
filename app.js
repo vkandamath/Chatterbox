@@ -1,10 +1,33 @@
-var express = require('express')
-var app = express()
+// Server side script
+
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+
+
+app.set('view engine', 'ejs');
+
+var userNum = 1;
 
 app.get('/', function (req, res) {
-	res.send('Hello World!')
-})
+	console.log(userNum);
+	res.render('index', {userNum: userNum});
+	userNum++;
+});
 
-app.listen(3000, function() {
-	console.log('app listening on port 3000')
-})
+io.on('connection', function(socket) {
+	console.log('a user connected')
+	socket.on('disconnect', function() {
+		console.log('user disconnected');
+	});
+
+	socket.on('outgoing message', function(msg) {
+		console.log("received: " + msg);
+		io.emit('incoming message', msg);
+	});
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});

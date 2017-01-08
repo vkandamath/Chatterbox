@@ -32,5 +32,6 @@ function sendMessage() {
 	if (message != '') {
 		$("#message").val('');
    		socket.emit('outgoing message', {message: message, userid: socket.id});
+   		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	}
 }

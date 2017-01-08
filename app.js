@@ -1,25 +1,27 @@
 // Server side script
-
-var app = require('express')();
+var express = require('express')
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-
-
 app.set('view engine', 'ejs');
-
-var userNum = 1;
+app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-	console.log(userNum);
-	res.render('index', {userNum: userNum});
-	userNum++;
+
+	res.render('index');
+
 });
 
 io.on('connection', function(socket) {
-	console.log('a user connected')
+	console.log('User ' + socket.id + ' connected!');
+	io.emit('connected', {userid: socket.id});
+
+	socket.emit('myUserId', {userId: socket.id});
+
 	socket.on('disconnect', function() {
-		console.log('user disconnected');
+		console.log('User ' + socket.id + ' disconnected!');
+		io.emit('disconnected', {userid: socket.id});
 	});
 
 	socket.on('outgoing message', function(msg) {
@@ -27,6 +29,7 @@ io.on('connection', function(socket) {
 		io.emit('incoming message', msg);
 	});
 });
+
 
 http.listen(3000, function(){
   console.log('listening on *:3000');

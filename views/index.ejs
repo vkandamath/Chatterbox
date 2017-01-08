@@ -4,31 +4,8 @@
     <title>Chatterbox</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <style>
-    	#messages {
-    		border: black solid 1px;
-    		width: 50%;
-    		height: 600px;
-    	}
-    </style>
-    <script>
-      var socket = io();
-
-      socket.on('incoming message', function(msg){
-        console.log(msg);
-        $("#messages-list").append("<li>" + msg + "</li>");
-      });
-
-
-      function sendMessage() {
-        var message = $("#message").val();
-
-        $("#message").val('');
-        
-        socket.emit('outgoing message', message);
-      }
-
-    </script>
+    <script src="/js/chatroom.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
   </head>
   <body>
   	<center>
@@ -37,7 +14,8 @@
   			<ul id="messages-list"></ul>
   		</div>
   		<br>
-  			User <%= userNum %>:<input type="text" id="message">
+  			<label id="message-label" for="message"></label>
+        <input type="text" id="message">
   			<button onclick="sendMessage()" id="sendMessage">Send</button>
   	</center>
   </body>

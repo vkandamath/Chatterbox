@@ -18,23 +18,23 @@ app.get('/', function (req, res) {
 });
 
 // Note: users should be stored in database if you want to scale
-//var usersOnline = new Set();
+var usersOnline = {};
 
 io.on('connection', function(socket) {
 	console.log('User ' + socket.id + ' connected!');
 
-	//usersOnline.add(socket.id);
+	usersOnline[socket.id] = '';
 	//console.log("num users: " + JSON.stringify(Array.from(usersOnline)));
 
 	console.log(Object.keys(io.sockets.sockets));
-	io.emit('connected', {userid: socket.id, usersOnline: Object.keys(io.sockets.sockets)});
+	io.emit('connected', {userid: socket.id, usersOnline: usersOnline});
 
 	socket.emit('myUserId', {userId: socket.id});
 
 	socket.on('disconnect', function() {
 		console.log('User ' + socket.id + ' disconnected!');
-		//usersOnline.delete(socket.id);
-		io.emit('disconnected', {userid: socket.id, usersOnline: Object.keys(io.sockets.sockets)});
+		delete usersOnline[socket.id];
+		io.emit('disconnected', {userid: socket.id, usersOnline: usersOnline});
 	});
 
 	socket.on('outgoing message', function(msg) {
@@ -51,5 +51,11 @@ io.on('connection', function(socket) {
 	socket.on('user is not typing', function(msg) {
 		console.log('user is not typing');
 		socket.broadcast.emit('user is not typing', msg);
+	});
+
+	socket.on('username change', function(msg) {
+		usersOnline[msg.userId] = msg.newUsername;
+		msg['usersOnline'] = usersOnline;
+		io.emit('username change', msg);
 	});
 });

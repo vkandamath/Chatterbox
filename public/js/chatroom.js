@@ -1,4 +1,5 @@
 var socket = io();
+var userId;
 
 window.onload = function() {
 	$("#message").keypress(function (e) {
@@ -6,9 +7,17 @@ window.onload = function() {
 		if (e.which == 13) {
 			sendMessage();
 		}
-
-		//socket.emit('user is typing', {userId, socket.id});
 	});
+
+	$("#message").keydown(function (e) {
+		socket.emit('user is typing', {userId, userId});
+	});
+
+	$("#message").keyup(function (e) {
+		socket.emit('user is not typing', {userId, userId});
+	});
+
+
 }
 
 function updateOnlineUsers(msg) {
@@ -26,34 +35,39 @@ function sendMessage() {
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
-		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
    		socket.emit('outgoing message', {message: message, userid: socket.id});
 	}
 }
 
 socket.on('connected', function(msg) {
 	$("#messages ul").append("<li><font color='green'>User " + msg.userid + " has connected.</font></li>");
-
+	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });
 
 socket.on('myUserId', function(msg) {
 	$("#user").append("User " + "<font color='#337AB7'>" + msg.userId + "</font>");
+	userId = msg.userId;
 });
 
 socket.on('disconnected', function(msg) {
 	$("#messages ul").append("<li><li><font color='red'>User " + msg.userid + " has disconnected.</font></li>");
-	console.log("Users online: " + msg.usersOnline);
-
+	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });
 
 socket.on('incoming message', function(msg){
     console.log(msg);
     $("#messages ul").append("<li>User " + msg.userid + ": " + msg.message + "</li>");
+    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 });
 
 socket.on('user is typing', function(msg) {
-	$("#user-typing").html("User is typing...")
+	$("#user-typing").html(msg.userId + " is typing...")
 });
+
+socket.on('user is not typing', function(msg) {
+	$("#user-typing").empty();
+});
+
 

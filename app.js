@@ -25,7 +25,7 @@ io.on('connection', function(socket) {
 
 	//usersOnline.add(socket.id);
 	//console.log("num users: " + JSON.stringify(Array.from(usersOnline)));
-	
+
 	console.log(Object.keys(io.sockets.sockets));
 	io.emit('connected', {userid: socket.id, usersOnline: Object.keys(io.sockets.sockets)});
 
@@ -43,6 +43,13 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('user is typing', function(msg) {
-		io.emit('user is typing', msg);
+		console.log('user is typing');
+		//sends to everyone except the user who is typing
+		socket.broadcast.emit('user is typing', msg);
+	});
+
+	socket.on('user is not typing', function(msg) {
+		console.log('user is not typing');
+		socket.broadcast.emit('user is not typing', msg);
 	});
 });

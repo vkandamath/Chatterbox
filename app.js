@@ -56,7 +56,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('username change', function(msg) {
-		usersOnline[msg.userId] = msg.newUsername;
+		usersOnline[msg.socketId] = msg.newUsername;
 		msg['usersOnline'] = usersOnline;
 		io.emit('username change', msg);
 	});

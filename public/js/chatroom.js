@@ -31,8 +31,9 @@ window.onload = function() {
 		if (e.which == 13) {
 			var newUsername = $("#change-username").val();
 			if (newUsername != '') {
-				socket.emit('username change', {userId: socket.id, newUsername: newUsername});
+				socket.emit('username change', {socketId: socket.id, oldUsername: userId, newUsername: newUsername});
 				userId = newUsername;
+				console.log(userId);
 			}
 		}
 	});
@@ -43,15 +44,13 @@ function updateOnlineUsers(msg) {
 	var usersHTML = "";
 
 	Object.keys(msg.usersOnline).forEach(function (key) {
-		console.log(msg.usersOnline);
+		//console.log(msg.usersOnline);
 		usersHTML += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='#15F612' stroke-width='1' fill='#15F612'/></svg>";
 		if (msg.usersOnline[key] == '') {
 			usersHTML += key;
-			console.log("2");
 		}
 		else {
 			usersHTML += msg.usersOnline[key];
-			console.log("s");
 		}
 		usersHTML += "</li>"
 	});
@@ -65,7 +64,6 @@ function sendMessage() {
 		$("#message").val('');
 		$("#messages ul").append("<li style='float: right'>Me: " + message+ "</li><br>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-    	console.log("EMITTING");
    		socket.emit('outgoing message', {message: message, userid: userId});
 	}
 	else {
@@ -139,9 +137,8 @@ socket.on('user is not typing', function(msg) {
 });
 
 socket.on('username change', function(msg) {
-	$('#messages ul').append("<li class='animated flash'><font color='purple'><strong>" + msg.userId + "</strong> changed his/her username to <strong>" + msg.newUsername + '</strong></font></li>');
+	$('#messages ul').append("<li class='animated flash'><font color='purple'><strong>" + msg.oldUsername + "</strong> changed his/her username to <strong>" + msg.newUsername + '</strong></font></li>');
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-	console.log(msg.usersOnline);
 	updateOnlineUsers(msg);
 });
 

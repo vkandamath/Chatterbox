@@ -63,7 +63,7 @@ function sendMessage() {
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
-		$("#messages ul").append("<li>User " + userId + ": " + message+ "</li>");
+		$("#messages ul").append("<li style='float: right'>Me: " + message+ "</li><br>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
     	console.log("EMITTING");
    		socket.emit('outgoing message', {message: message, userid: userId});

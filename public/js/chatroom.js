@@ -49,7 +49,7 @@ function sendMessage() {
 }
 
 socket.on('connected', function(msg) {
-	$("#messages ul").append("<li><font color='green'>User " + msg.userid + " has connected.</font></li>");
+	$("#messages ul").append("<li class='animated flash'><font color='green'>User " + msg.userid + " has connected.</font></li>");
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });
@@ -60,7 +60,7 @@ socket.on('myUserId', function(msg) {
 });
 
 socket.on('disconnected', function(msg) {
-	$("#messages ul").append("<li><li><font color='red'>User " + msg.userid + " has disconnected.</font></li>");
+	$("#messages ul").append("<li><li class='animated flash'><font color='red'>User " + msg.userid + " has disconnected.</font></li>");
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });

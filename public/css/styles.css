@@ -8,10 +8,6 @@ body {
   text-align: center;
 }
 
-.navbar-default .navbar-brand {
-  color: #337AB7;
-}
-
 #wrapper {
   text-align: center;
 }
@@ -45,3 +41,17 @@ body {
 #user-typing {
   position: absolute; bottom: 0
 }
+
+.fill {
+  position: relative;
+}
+
+
+#footer {
+  margin-top: 30px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+

@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chatterbox</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chatroom.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
@@ -13,16 +17,18 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand">
+            <a class="navbar-brand" style="color: #337AB7;">
               Chatterbox
             </a>  
           </div>
         </div>
       </nav>
 
-      <div class="container-fluid">
+      <h1 class="shake infinite">asd</h1>
+
+      <div class="container-fluid fill">
         <div class="row">
-          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" id="messages-container">
+          <div class="col-md-12 col-lg-8" id="messages-container">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 Messages
@@ -33,7 +39,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+          <div class="col-md-0 col-lg-4">
             <div class="panel panel-success">
               <div class="panel-heading">
                 Users Online
@@ -44,11 +50,9 @@
             </div>
           </div>
         </div>
-
-
     
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row" id="input-container">
+          <div class="col-md-12 col-lg-12">
             <div class="input-group">
               <span class="input-group-addon" id="user"></span>
               <input type="text" class="form-control" id="message">
@@ -58,20 +62,13 @@
             </div>
           </div>
         </div>
+
+        <div class="row" id="footer">
+          <span class="text-muted">Created by Vyshakh Kandamath. Made using Node.js, Express.js, Socket.io, and love.</span>
+        </div>
           
       </div>
 
-
-
-
-<!--
-  		<div id="messages">
-  			<ul id="messages-list"></ul>
-  		</div>
-  		<br>
-  			<label id="message-label" for="message"></label>
-        <input type="text" id="message">
-  			<button onclick="sendMessage()" id="sendMessage">Send</button>-->
 
   </body>
 </html>

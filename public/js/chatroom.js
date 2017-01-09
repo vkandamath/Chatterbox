@@ -2,9 +2,12 @@ var socket = io();
 
 window.onload = function() {
 	$("#message").keypress(function (e) {
+		// Hit enter to send
 		if (e.which == 13) {
 			sendMessage();
 		}
+
+		//socket.emit('user is typing', {userId, socket.id});
 	});
 }
 
@@ -19,6 +22,15 @@ function updateOnlineUsers(msg) {
 	$("#usersOnline ul").html(usersHTML);
 }
 
+function sendMessage() {
+	var message = $("#message").val();
+	if (message != '') {
+		$("#message").val('');
+		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+   		socket.emit('outgoing message', {message: message, userid: socket.id});
+	}
+}
+
 socket.on('connected', function(msg) {
 	$("#messages ul").append("<li><font color='green'>User " + msg.userid + " has connected.</font></li>");
 
@@ -27,7 +39,7 @@ socket.on('connected', function(msg) {
 
 socket.on('myUserId', function(msg) {
 	$("#user").append("User " + "<font color='#337AB7'>" + msg.userId + "</font>");
-})
+});
 
 socket.on('disconnected', function(msg) {
 	$("#messages ul").append("<li><li><font color='red'>User " + msg.userid + " has disconnected.</font></li>");
@@ -41,12 +53,7 @@ socket.on('incoming message', function(msg){
     $("#messages ul").append("<li>User " + msg.userid + ": " + msg.message + "</li>");
 });
 
+socket.on('user is typing', function(msg) {
+	$("#user-typing").html("User is typing...")
+});
 
-function sendMessage() {
-	var message = $("#message").val();
-	if (message != '') {
-		$("#message").val('');
-		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-   		socket.emit('outgoing message', {message: message, userid: socket.id});
-	}
-}

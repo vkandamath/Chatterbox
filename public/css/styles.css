@@ -1,0 +1,47 @@
+body {
+  overflow-x: hidden;
+}
+.navbar-brand {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  text-align: center;
+}
+
+.navbar-default .navbar-brand {
+  color: #337AB7;
+}
+
+#wrapper {
+  text-align: center;
+}
+#messages {
+  height: 600px;
+  overflow-y: auto;
+  position: relative;
+}
+
+#usersOnline {
+  height: 600px;
+  overflow-y: auto;
+}
+
+#messages ul, #usersOnline ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#userInput {
+  margin-top: 10px;
+}
+#messages-container {
+  padding-right: 0px;
+}
+
+.panel-heading {
+  text-align: center;
+}
+
+#user-typing {
+  position: absolute; bottom: 0
+}

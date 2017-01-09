@@ -12,10 +12,12 @@ server.listen(process.env.PORT || 3000, function(){
 });
 
 app.get('/', function (req, res) {
-
 	res.render('index');
-
 });
+
+app.get('/*', function(req, res) {
+	res.redirect('/');
+})
 
 // Note: users should be stored in database if you want to scale
 var usersOnline = {};

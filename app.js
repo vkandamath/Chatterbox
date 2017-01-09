@@ -17,15 +17,22 @@ app.get('/', function (req, res) {
 
 });
 
+// Note: users should be stored in database if you want to scale
+var usersOnline = new Set();
+
 io.on('connection', function(socket) {
 	console.log('User ' + socket.id + ' connected!');
-	io.emit('connected', {userid: socket.id});
+	
+	usersOnline.add(socket.id);
+	//console.log("num users: " + JSON.stringify(Array.from(usersOnline)));
+	io.emit('connected', {userid: socket.id, usersOnline: Array.from(usersOnline)});
 
 	socket.emit('myUserId', {userId: socket.id});
 
 	socket.on('disconnect', function() {
 		console.log('User ' + socket.id + ' disconnected!');
-		io.emit('disconnected', {userid: socket.id});
+		usersOnline.delete(socket.id);
+		io.emit('disconnected', {userid: socket.id, usersOnline: Array.from(usersOnline)});
 	});
 
 	socket.on('outgoing message', function(msg) {

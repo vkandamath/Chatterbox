@@ -39,7 +39,7 @@ io.on('connection', function(socket) {
 
 	socket.on('outgoing message', function(msg) {
 		console.log("received: " + msg);
-		io.emit('incoming message', msg);
+		socket.broadcast.emit('incoming message', msg);
 	});
 
 	socket.on('user is typing', function(msg) {

@@ -30,8 +30,10 @@ window.onload = function() {
 	$("#change-username").keypress(function (e) {
 		if (e.which == 13) {
 			var newUsername = $("#change-username").val();
-			socket.emit('username change', {userId: socket.id, newUsername: newUsername});
-			userId = newUsername;
+			if (newUsername != '') {
+				socket.emit('username change', {userId: socket.id, newUsername: newUsername});
+				userId = newUsername;
+			}
 		}
 	});
 }
@@ -61,7 +63,10 @@ function sendMessage() {
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
-   		socket.emit('outgoing message', {message: message, userid: socket.id});
+		$("#messages ul").append("<li>User " + userId + ": " + message+ "</li>");
+    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+    	console.log("EMITTING");
+   		socket.emit('outgoing message', {message: message, userid: userId});
 	}
 	else {
 		var button = $("#sendMessage");
@@ -71,6 +76,16 @@ function sendMessage() {
 			button.addClass('animated shake');
 		}, 1000);
 
+	}
+}
+
+function changeTitle(text) {
+	var title = document.title;
+	if (title == 'Chatterbox') {
+		document.title = text;
+	}
+	else {
+		document.title = 'Chatterbox';
 	}
 }
 
@@ -92,9 +107,25 @@ socket.on('disconnected', function(msg) {
 });
 
 socket.on('incoming message', function(msg){
-    console.log(msg);
     $("#messages ul").append("<li>User " + msg.userid + ": " + msg.message + "</li>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+
+    //sets tab notification if user is not on chat tab
+    window.onblur = function() {
+	    var title = document.title;
+	    var notifInterval = setInterval(function() {
+	    	changeTitle(msg.userid + " sent you a message!");
+	    },2000);
+	};
+
+	window.onfocus = function() {
+		console.log('clearing');
+		clearInterval(notifInterval);
+		document.title = "Chatterbox";
+	};
+
+	document.onblur = window.onblur;
+	document.onfocus = window.onfocus;
 });
 
 socket.on('user is typing', function(msg) {

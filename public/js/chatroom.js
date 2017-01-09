@@ -107,10 +107,12 @@ socket.on('disconnected', function(msg) {
 });
 
 socket.on('incoming message', function(msg){
-    $("#messages ul").append("<li>User " + msg.userid + ": " + msg.message + "</li>");
+    $("#messages ul").append("<li><a>User " + msg.userid + ": " + msg.message + "</a></li>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
+    //TODO: does not work 100%
     //sets tab notification if user is not on chat tab
+    /*
     window.onblur = function() {
 	    var title = document.title;
 	    var notifInterval = setInterval(function() {
@@ -125,7 +127,7 @@ socket.on('incoming message', function(msg){
 	};
 
 	document.onblur = window.onblur;
-	document.onfocus = window.onfocus;
+	document.onfocus = window.onfocus;*/
 });
 
 socket.on('user is typing', function(msg) {

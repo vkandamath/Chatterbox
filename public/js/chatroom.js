@@ -9,12 +9,21 @@ window.onload = function() {
 		}
 	});
 
+	var timer;
+
+	// User is typing
 	$("#message").keydown(function (e) {
 		socket.emit('user is typing', {userId, userId});
+		window.clearTimeout(timer);
 	});
 
+	// User is not typing
 	$("#message").keyup(function (e) {
-		socket.emit('user is not typing', {userId, userId});
+
+		timer = window.setTimeout(function() {
+			socket.emit('user is not typing', {userId, userId});
+		}, 2500)
+		
 	});
 
 

@@ -13,7 +13,7 @@ body {
   text-align: center;
 }
 #messages {
-  height: 600px;
+  height: 559px;
   overflow-y: auto;
   position: relative;
 }
@@ -35,13 +35,6 @@ body {
   padding-right: 0px;
 }
 
-.panel-heading {
-  text-align: center;
-}
-
-#user-typing {
-  position: absolute; bottom: 0
-}
 
 .fill {
   position: relative;
@@ -57,7 +50,7 @@ body {
 }
 
 .navbar-brand a{
-  color: #337AB7;;
+  color: #337AB7;
 }
 
 .navbar-brand span{

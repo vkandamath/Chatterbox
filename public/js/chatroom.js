@@ -85,7 +85,7 @@ socket.on('user is typing', function(msg) {
 });
 
 socket.on('user is not typing', function(msg) {
-	$("#user-typing").empty();
+	$("#user-typing").html("&nbsp");
 });
 
 

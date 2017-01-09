@@ -46,6 +46,15 @@ function sendMessage() {
 		$("#message").val('');
    		socket.emit('outgoing message', {message: message, userid: socket.id});
 	}
+	else {
+		var button = $("#sendMessage");
+
+		button.removeClass('animated shake');
+		setInterval(function() {
+			button.addClass('animated shake');
+		}, 1000);
+
+	}
 }
 
 socket.on('connected', function(msg) {

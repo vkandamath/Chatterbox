@@ -8,4 +8,8 @@ https://chatterbox-sample.herokuapp.com/
 ```
 npm start
 ```
+or 
+```
+node app.js
+```
 Open http://localhost:3000/ in browser.

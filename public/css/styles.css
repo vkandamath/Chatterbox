@@ -65,3 +65,12 @@ body {
 #color-picker {
   text-align: center;
 }
+
+.img-thumbnail {
+  height: 50%;
+  width: 50%;
+}
+
+#messages p {
+  display: inline;
+}

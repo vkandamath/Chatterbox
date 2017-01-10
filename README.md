@@ -16,5 +16,6 @@ node app.js
 2) Open http://localhost:3000/ in browser.
 
 ## Preview:
+<img src="https://github.com/vkandamath/chatterbox/blob/master/screenshot.png">
 
 

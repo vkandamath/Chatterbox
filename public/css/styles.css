@@ -13,13 +13,13 @@ body {
   text-align: center;
 }
 #messages {
-  height: 519px;
+  height: 509px;
   overflow-y: auto;
   position: relative;
 }
 
 #usersOnline {
-  height: 560px;
+  height: 550px;
   overflow-y: auto;
 }
 
@@ -64,6 +64,10 @@ body {
 
 #color-picker {
   text-align: center;
+  border-radius: 2px; 
+  border: none; 
+  padding: 5px 5px 5px 5px;
+  margin-left: 3px;
 }
 
 .img-thumbnail {

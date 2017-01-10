@@ -1,5 +1,6 @@
 var socket = io();
 var userId;
+var colorCode;
 
 window.onload = function() {
 	$("#message").keypress(function (e) {
@@ -37,6 +38,7 @@ window.onload = function() {
 			}
 		}
 	});
+
 }
 
 function updateOnlineUsers(msg) {
@@ -45,12 +47,12 @@ function updateOnlineUsers(msg) {
 
 	Object.keys(msg.usersOnline).forEach(function (key) {
 		//console.log(msg.usersOnline);
-		usersHTML += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='#15F612' stroke-width='1' fill='#15F612'/></svg>";
-		if (msg.usersOnline[key] == '') {
+		usersHTML += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + msg.usersOnline[key].colorCode + "' stroke-width='1' fill='" + msg.usersOnline[key].colorCode + "'/></svg>";
+		if (msg.usersOnline[key].username == '') {
 			usersHTML += key;
 		}
 		else {
-			usersHTML += msg.usersOnline[key];
+			usersHTML += msg.usersOnline[key].username;
 		}
 		usersHTML += "</li>"
 	});
@@ -59,12 +61,13 @@ function updateOnlineUsers(msg) {
 }
 
 function sendMessage() {
+	console.log(colorCode);
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
-		$("#messages ul").append("<li style='float: right'>Me: " + message+ "</li><br>");
+		$("#messages ul").append("<li class='my-message' style='float: right; color: " + colorCode + "'>Me: " + message + "</li><br>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-   		socket.emit('outgoing message', {message: message, userid: userId});
+   		socket.emit('outgoing message', {message: message, userid: userId, colorCode: colorCode, socketid: socket.id});
 	}
 	else {
 		var button = $("#sendMessage");
@@ -73,7 +76,6 @@ function sendMessage() {
 		setInterval(function() {
 			button.addClass('animated shake');
 		}, 1000);
-
 	}
 }
 
@@ -87,25 +89,46 @@ function changeTitle(text) {
 	}
 }
 
+function changeColor(colorHex) {
+	colorCode = "#" + String(colorHex);
+	$(".my-message").css("color", colorCode);
+	socket.emit('change color', {socketid: socket.id, colorHex: String(colorHex)});
+}
+
 socket.on('connected', function(msg) {
-	$("#messages ul").append("<li class='animated flash'><font color='green'><strong>" + msg.userid + "</strong> has connected.</font></li>");
+	$("#messages ul").append("<li class='animated flash'><font color='black'><strong>" + msg.userid + "</strong> has connected.</font></li>");
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });
 
 socket.on('myUserId', function(msg) {
 	$("#change-username").val(msg.userId);
+
+	var tempColorCode = msg.colorCode;
+	tempColorCode = tempColorCode.substring(1);
+
+	// converting color code to rgb
+	var r = parseInt(tempColorCode.substring(0,2), 16);
+	var g = parseInt(tempColorCode.substring(2,4), 16);
+	var b = parseInt(tempColorCode.substring(4,6), 16);
+
+	//change background color of input button
+	$("#color-picker").css("background-color", "rgb(" + r + "," + g + "," + b + ")");
+	$("#color-picker").val(tempColorCode);
+
 	userId = msg.userId;
+	colorCode = msg.colorCode;
 });
 
 socket.on('disconnected', function(msg) {
-	$("#messages ul").append("<li><li class='animated flash'><font color='red'><strong>" + msg.userid + "</strong> has disconnected.</font></li>");
+	$("#messages ul").append("<li><li class='animated flash'><font color='black'><strong>" + msg.userid + "</strong> has disconnected.</font></li>");
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
 });
 
 socket.on('incoming message', function(msg){
-    $("#messages ul").append("<li>" + msg.userid + ": " + msg.message + "</li>");
+	console.log(msg.message);
+    $("#messages ul").append("<li class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'>" + msg.userid + ": " + msg.message + "</li>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
     //TODO: does not work 100%
@@ -137,9 +160,16 @@ socket.on('user is not typing', function(msg) {
 });
 
 socket.on('username change', function(msg) {
-	$('#messages ul').append("<li class='animated flash'><font color='purple'><strong>" + msg.oldUsername + "</strong> changed his/her username to <strong>" + msg.newUsername + '</strong></font></li>');
+	$('#messages ul').append("<li class='animated flash'><font color='black'><strong>" + msg.oldUsername + "</strong> changed his/her username to <strong>" + msg.newUsername + '</strong></font></li>');
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 	updateOnlineUsers(msg);
+});
+
+socket.on('change color', function(msg) {
+	updateOnlineUsers(msg);
+
+	//Change existing chat messages of user to new color
+	$(".messageOf-" + msg.socketid).css("color", "#" + msg.colorHex);
 });
 
 

@@ -20,18 +20,32 @@ app.get('/*', function(req, res) {
 })
 
 // Note: users should be stored in database if you want to scale
-var usersOnline = {};
+// For simplicity, defining model here for now
+class User {
+	constructor(socketid, username, colorCode) {
+		this.socketid = socketid;
+		this.username = username;
+		this.colorCode = colorCode;
+	}
+}
+
+var usersOnline = {}; // stores user objects
+
 
 io.on('connection', function(socket) {
 	console.log('User ' + socket.id + ' connected!');
 
-	usersOnline[socket.id] = '';
-	//console.log("num users: " + JSON.stringify(Array.from(usersOnline)));
+	var colorCode = generateColorCode();
+	var newUser = new User(socket.id, '', colorCode);
+	usersOnline[socket.id] = newUser;
 
-	console.log(Object.keys(io.sockets.sockets));
+	//usersOnline[socket.id] = '';
+	//userColors[socket.id] = generateColorCode();
+
+	//console.log(Object.keys(io.sockets.sockets));
 	io.emit('connected', {userid: socket.id, usersOnline: usersOnline});
 
-	socket.emit('myUserId', {userId: socket.id});
+	socket.emit('myUserId', {userId: socket.id, colorCode: colorCode});
 
 	socket.on('disconnect', function() {
 		console.log('User ' + socket.id + ' disconnected!');
@@ -56,8 +70,28 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('username change', function(msg) {
-		usersOnline[msg.socketId] = msg.newUsername;
+		usersOnline[msg.socketId].username = msg.newUsername;
 		msg['usersOnline'] = usersOnline;
 		io.emit('username change', msg);
 	});
+
+	socket.on('change color', function(msg) {
+		console.log("Changing color to: " + msg.colorHex);
+		usersOnline[msg.socketid].colorCode = "#" + msg.colorHex;
+		msg['usersOnline'] = usersOnline;
+		io.emit('change color', msg);
+	});
 });
+
+function generateColorCode() {
+	var allValues = "ABCDEF1234567890";
+	var colorCode = "#";
+	for (var i = 0; i < 6; i++) {
+		var index = Math.floor(Math.random()*allValues.length);
+    	colorCode += allValues[index];
+	}
+  return colorCode;
+}
+
+
+

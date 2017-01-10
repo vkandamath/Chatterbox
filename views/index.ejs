@@ -68,6 +68,8 @@
               </span>
               <input type="text" class="form-control" id="message" style="height: 36px;">
               <span class="input-group-btn">
+                <input type="button" class="btn btn-success" id="browse" value="Browse" style="height: 36px">
+                <input type="file" id="upload" style="display: none" onchange="sendImage()" >
                 <button class="btn btn-primary" onclick="sendMessage()" id="sendMessage" style="height: 36px">Send</button>
               </span>
             </div>

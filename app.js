@@ -81,6 +81,11 @@ io.on('connection', function(socket) {
 		msg['usersOnline'] = usersOnline;
 		io.emit('change color', msg);
 	});
+
+	socket.on('outgoing image', function(msg) {
+		console.log('sending out image: ' + msg.imageData);
+		socket.broadcast.emit('incoming image', msg);
+	});
 });
 
 function generateColorCode() {

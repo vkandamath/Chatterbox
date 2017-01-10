@@ -39,6 +39,28 @@ window.onload = function() {
 		}
 	});
 
+	// trigger file uploads if browser button is clicked
+	$("#browse").click(function() {
+		$("#upload").trigger("click");
+	});
+
+}
+
+function sendImage() {
+	var file = $("#upload")[0].files[0];
+	var reader = new FileReader();
+
+	if (file){
+		reader.readAsDataURL(file);
+	}
+
+	reader.onload = function(event) {
+
+		$("#messages ul").append("<li class='my-message' style='float: right; color: " + colorCode + "'><strong>Me:</strong> <img class='img-thumbnail' src='" + reader.result + "'></li><br>");
+    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+
+		socket.emit("outgoing image", {colorCode: colorCode, socketId: socket.id, userId: userId, imageData: reader.result});
+	}
 }
 
 function updateOnlineUsers(msg) {
@@ -170,6 +192,11 @@ socket.on('change color', function(msg) {
 
 	//Change existing chat messages of user to new color
 	$(".messageOf-" + msg.socketid).css("color", "#" + msg.colorHex);
+});
+
+socket.on('incoming image', function(msg) {
+	$("#messages ul").append("<li class='messageOf-" + msg.socketId + "' style='color:" + msg.colorCode + "'><strong>" + msg.userId + "</strong>: <img class='img-thumbnail' src='" + msg.imageData + "'></li>");
+    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 });
 
 

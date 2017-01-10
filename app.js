@@ -70,9 +70,11 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('username change', function(msg) {
-		usersOnline[msg.socketId].username = msg.newUsername;
-		msg['usersOnline'] = usersOnline;
-		io.emit('username change', msg);
+		if (usersOnline[msg.socketId].username != msg.newUsername) {
+			usersOnline[msg.socketId].username = msg.newUsername;
+			msg['usersOnline'] = usersOnline;
+			io.emit('username change', msg);
+		}
 	});
 
 	socket.on('change color', function(msg) {

@@ -150,7 +150,7 @@ socket.on('disconnected', function(msg) {
 
 socket.on('incoming message', function(msg){
 	console.log(msg.message);
-    $("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'><strong>" + msg.userid + "</strong>: " + msg.message + "</p></div><br>");
+    $("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'><strong>" + msg.userid + "</strong>: " + msg.message + "</p></div>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
     //TODO: does not work 100%

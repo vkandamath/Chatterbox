@@ -65,7 +65,7 @@ function sendMessage() {
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
-		$("#messages ul").append("<li class='my-message' style='float: right; color: " + colorCode + "'>Me: " + message + "</li><br>");
+		$("#messages ul").append("<li class='my-message' style='float: right; color: " + colorCode + "'><strong>Me:</strong> " + message + "</li><br>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
    		socket.emit('outgoing message', {message: message, userid: userId, colorCode: colorCode, socketid: socket.id});
 	}
@@ -128,7 +128,7 @@ socket.on('disconnected', function(msg) {
 
 socket.on('incoming message', function(msg){
 	console.log(msg.message);
-    $("#messages ul").append("<li class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'>" + msg.userid + ": " + msg.message + "</li>");
+    $("#messages ul").append("<li class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'><strong>" + msg.userid + "</strong>: " + msg.message + "</li>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
     //TODO: does not work 100%

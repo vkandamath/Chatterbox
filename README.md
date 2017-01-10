@@ -1,5 +1,5 @@
 # Chatterbox
-A simple chat application I wrote to learn Node.js development using Express.js and Socket.io. Frontend was developed using Bootstrap.
+An anonymous chat application I wrote to learn Node.js development using Express.js and Socket.io. Frontend was developed using Bootstrap, Animate.css, jscolor, and jQuery.
 
 ## Try it out here
 https://chatterbox-sample.herokuapp.com/

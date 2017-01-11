@@ -3,6 +3,7 @@ An anonymous chat application I wrote to learn Node.js development using Express
 
 ## Try it out here
 https://chatterbox-sample.herokuapp.com/
+* Open multiple windows with chat client and start chatting way!
 
 ## Get up and running
 1) Run:

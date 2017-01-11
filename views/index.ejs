@@ -32,7 +32,7 @@
 
       <div class="container-fluid fill">
         <div class="row">
-          <div class="col-md-12 col-lg-8" id="messages-container">
+          <div class="col-lg-8" id="messages-container">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 Messages
@@ -44,7 +44,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-0 col-lg-4">
+          <div class="col-lg-4">
             <div class="panel panel-success">
               <div class="panel-heading">
                 Users Online
@@ -63,9 +63,9 @@
                 <input title="Type a new username and hit enter." type="text" id="change-username" size="30" maxlength="30"/>
               </span>
               <span class="input-group-addon">
-                Color: #<input id="color-picker" class="jscolor" size="7" disabled="disabled" onchange="changeColor(this.jscolor)"/>
+                Select color: #<input id="color-picker" class="jscolor" size="7" disabled="disabled" onchange="changeColor(this.jscolor)"/>
               </span>
-              <input type="text" class="form-control" id="message" style="height: 40px;">
+              <input type="text" class="form-control" id="message" style="height: 40px;" placeholder="Start typing!">
               <span class="input-group-btn">
                 <input type="button" class="btn btn-success" id="browse" value="Browse" style="height: 40px">
                 <input type="file" id="upload" style="display: none" onchange="sendImage()" >

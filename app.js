@@ -48,7 +48,7 @@ io.on('connection', function(socket) {
 	socket.emit('myUserId', {userId: socket.id, colorCode: colorCode});
 
 	socket.on('disconnect', function() {
-		console.log('User ' + socket.id + ' disconnected!');
+		console.log('User ' + usersOnline[socket.id].username + ' disconnected!');
 		delete usersOnline[socket.id];
 		io.emit('disconnected', {userid: socket.id, usersOnline: usersOnline});
 	});

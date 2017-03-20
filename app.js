@@ -48,8 +48,12 @@ io.on('connection', function(socket) {
 
 	socket.on('disconnect', function() {
 		console.log('User ' + usersOnline[socket.id].username + ' disconnected!');
+		var username = usersOnline[socket.id].username;
+		if (username == "") {
+			username = socket.id;
+		}
 		delete usersOnline[socket.id];
-		io.emit('disconnected', {userid: socket.id, usersOnline: usersOnline});
+		io.emit('disconnected', {userid: username, usersOnline: usersOnline});
 	});
 
 	socket.on('outgoing message', function(msg) {
@@ -59,7 +63,7 @@ io.on('connection', function(socket) {
 
 	socket.on('user is typing', function(msg) {
 		console.log('user is typing');
-		
+
 		//sends to everyone except the user who is typing
 		socket.broadcast.emit('user is typing', msg);
 	});

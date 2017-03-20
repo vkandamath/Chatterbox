@@ -152,25 +152,6 @@ socket.on('incoming message', function(msg){
 	console.log(msg.message);
     $("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.colorCode + "'><strong>" + msg.userid + "</strong>: " + msg.message + "</p></div>");
     $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-
-    //TODO: does not work 100%
-    //sets tab notification if user is not on chat tab
-    /*
-    window.onblur = function() {
-	    var title = document.title;
-	    var notifInterval = setInterval(function() {
-	    	changeTitle(msg.userid + " sent you a message!");
-	    },2000);
-	};
-
-	window.onfocus = function() {
-		console.log('clearing');
-		clearInterval(notifInterval);
-		document.title = "Chatterbox";
-	};
-
-	document.onblur = window.onblur;
-	document.onfocus = window.onfocus;*/
 });
 
 socket.on('user is typing', function(msg) {

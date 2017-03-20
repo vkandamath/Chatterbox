@@ -11,10 +11,13 @@ server.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
 
+
+// Presents user with homepage
 app.get('/', function (req, res) {
 	res.render('index');
 });
 
+// Redirects user to homepage if they try to access something else
 app.get('/*', function(req, res) {
 	res.redirect('/');
 })
@@ -29,8 +32,8 @@ class User {
 	}
 }
 
-var usersOnline = {}; // stores user objects
-
+// stores user objects
+var usersOnline = {}; 
 
 io.on('connection', function(socket) {
 	console.log('User ' + socket.id + ' connected!');
@@ -39,10 +42,6 @@ io.on('connection', function(socket) {
 	var newUser = new User(socket.id, '', colorCode);
 	usersOnline[socket.id] = newUser;
 
-	//usersOnline[socket.id] = '';
-	//userColors[socket.id] = generateColorCode();
-
-	//console.log(Object.keys(io.sockets.sockets));
 	io.emit('connected', {userid: socket.id, usersOnline: usersOnline});
 
 	socket.emit('myUserId', {userId: socket.id, colorCode: colorCode});
@@ -60,6 +59,7 @@ io.on('connection', function(socket) {
 
 	socket.on('user is typing', function(msg) {
 		console.log('user is typing');
+		
 		//sends to everyone except the user who is typing
 		socket.broadcast.emit('user is typing', msg);
 	});
@@ -90,6 +90,7 @@ io.on('connection', function(socket) {
 	});
 });
 
+// Helper function to retrieve random color code
 function generateColorCode() {
 	var allValues = "ABCDEF1234567890";
 	var colorCode = "#";

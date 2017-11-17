@@ -27,23 +27,27 @@ mongoose.connect(mongoUri, function (err, res) {
 	}
 });
 
-var userShema = new mongoose.Schema({
-	socket_id: String,
+var Schema = mongoose.Schema;
+
+var userShema = Schema({
+	// Assume socket_id is not unique since same socket id can be regenerated 
+	// between previouslydisconnected user and newly connected user
+	socket_id: String, 
 	username: String,
 	language: String,
 	color: String,
-	is_online: Boolean
+	is_online: Boolean,
 	messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }]
 });
 
-var messageSchema = new mongoose.Schema({
-	user: { type: Schema.Types.ObjectId, ref: 'User' }
+var messageSchema = Schema({
+	user: { type: Schema.Types.ObjectId, ref: 'User' },
 	time_stamp: { type: Date, default: Date.now }
 });
 
 // Presents user with homepage
 app.get('/', function (req, res) {
-	res.render('index');
+	res.render('chatroom');
 });
 
 // Redirects user to homepage if they try to access something else

@@ -3,14 +3,29 @@ var express = require('express');
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var mongoose = require ("mongoose");
+
+// Set up database
+var mongoUri = process.env.MONGOLAB_URI;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-server.listen(process.env.PORT || 3000, function(){
-  console.log('listening on *:3000');
+// Set up server port
+server.listen(process.env.PORT, function(){
+  console.log('listening on *:' + process.env.PORT);
 });
 
+// Makes connection asynchronously.  Mongoose will queue up database
+// operations and release them when the connection is complete.
+mongoose.connect(mongoUri, function (err, res) {
+	if (err) {
+		console.log ('ERROR connecting to: ' + mongoUri + '. ' + err);
+	} 
+	else {
+		console.log ('Succeeded connected to: ' + mongoUri);
+	}
+});
 
 // Presents user with homepage
 app.get('/', function (req, res) {

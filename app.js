@@ -27,6 +27,20 @@ mongoose.connect(mongoUri, function (err, res) {
 	}
 });
 
+var userShema = new mongoose.Schema({
+	socket_id: String,
+	username: String,
+	language: String,
+	color: String,
+	is_online: Boolean
+	messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }]
+});
+
+var messageSchema = new mongoose.Schema({
+	user: { type: Schema.Types.ObjectId, ref: 'User' }
+	time_stamp: { type: Date, default: Date.now }
+});
+
 // Presents user with homepage
 app.get('/', function (req, res) {
 	res.render('index');

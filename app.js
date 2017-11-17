@@ -18,7 +18,7 @@ server.listen(process.env.PORT, function(){
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
-mongoose.connect(mongoUri, function (err, res) {
+mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
 	if (err) {
 		console.log ('ERROR connecting to: ' + mongoUri + '. ' + err);
 	} 

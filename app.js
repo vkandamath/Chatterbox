@@ -9,8 +9,6 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var cookieParser = require('cookie-parser')
 var session = require('express-session')
-var enforce = require('express-sslify');
-
 
 var mongoUri = process.env.MONGOLAB_URI;
 
@@ -18,11 +16,6 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 console.log(process.env);
-
-if (process.env.NODE_ENV == 'production') {
-	console.log("FORCEING SSL");
-	//app.use(enforce.HTTPS());
-}
 
 app.use(cookieParser());
 app.use(session({ 
@@ -80,6 +73,14 @@ var messageSchema = Schema({
 var User = mongoose.model('User', userShema);
 var Chatroom = mongoose.model('Chatroom', chatroomSchema);
 var Message = mongoose.model('Messsage', messageSchema); 
+
+app.get("*", function (req, res, next) {
+	if(req.headers['x-forwarded-proto'] != 'https' && process.env.NODE_ENV == "production")
+    	res.redirect('https://' + process.env.HOSTNAME + req.url)
+    else
+    	next()
+
+});
 
 // Presents user with homepage
 app.get('/', function (req, res) {

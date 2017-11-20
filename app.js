@@ -21,7 +21,7 @@ console.log(process.env);
 
 if (process.env.NODE_ENV == 'production') {
 	console.log("FORCEING SSL");
-	app.use(enforce.HTTPS());
+	//app.use(enforce.HTTPS());
 }
 
 app.use(cookieParser());

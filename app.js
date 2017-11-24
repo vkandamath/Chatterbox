@@ -107,11 +107,11 @@ app.get('/chatroom', function (req, res, next) {
 	console.log((process.env.HOSTNAME + "/"))
 
 	// To prevent direct url access 
-	if (req.header('Referer') != (process.env.HOSTNAME + "/")) {
-		console.log("SD")
-		res.redirect('/')
-	} 
-	else {
+	//if (req.header('Referer') != (process.env.HOSTNAME + "/")) {
+		//console.log("SD")
+		//res.redirect('/')
+	//} 
+	//else {
 		//TODO: use this later
 		req.session.my_nickname = req.param('nickname')
 		req.session.my_language = req.param('language')
@@ -126,7 +126,7 @@ app.get('/chatroom', function (req, res, next) {
 				res.redirect("/chatroom/" + newChatroom._id)
 			}
 		})
-	}
+	//}
 })
 
 // Renders chatroom with room_id to user

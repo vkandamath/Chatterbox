@@ -78,3 +78,7 @@ body {
 #messages p {
   display: inline;
 }
+
+.modal-backdrop {
+  opacity: 0.8
+}

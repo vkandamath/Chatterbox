@@ -1,14 +1,32 @@
 var socket = io();
-var username;
 var color_code;
 
+// Language codes
+var lang_codes = {
+	English: "en",
+	French: "fr",
+	German: "de",
+	Italian: "it",
+	Spanish: "es",
+}
+
+function setUserProperties() {
+	var nickname = $("#modal-nickname").val()
+	var language = $("#modal-lang").val()
+	console.log(nickname)
+
+	socket.emit('set user properties', {nickname: nickname, language: language})
+	$("#myModal").modal("hide")
+}
+
 function sendMessage() {
+
 	var message = $("#message").val();
 	if (message != '') {
 		$("#message").val('');
 		$("#messages").append("<div style='text-align: right'><p class='my-message' style='color: " + color_code + "'><strong>Me:</strong> " + message + "</p></div>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-   		socket.emit('outgoing message', {message: message, username: username, color_code: color_code, socket_id: socket.id, room_id:room_id});
+   		socket.emit('outgoing message', {message: message, username: username, color_code: color_code, socket_id: socket.id, room_id: room_id, language: my_language});
 	}
 	else {
 		var button = $("#sendMessage");
@@ -36,10 +54,17 @@ function updateOnlineUsers(msg) {
 	$("#usersOnline ul").html(users_html);
 }
 
+
 window.onload = function() {
 
-	socket.emit("joined room", {room_id: room_id});
-	username = socket.id;
+	console.log(is_first_user);
+	console.log(typeof is_first_user)
+
+	if (is_first_user == "false") {
+		$("#myModal").modal('show')
+	}
+
+	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language});
 
 	$("#message").keypress(function (e) {
 		// Hit enter to send
@@ -58,9 +83,22 @@ window.onload = function() {
 	});
 
 	socket.on('incoming message', function(msg){
-		console.log(msg.message);
-	    $("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + msg.message + "</p></div>");
-	    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+
+		var src_lang = msg.language;
+		var dest_lang = my_language;
+
+		var src_lang_code = lang_codes[src_lang]
+		var dest_lang_code = lang_codes[dest_lang]
+
+		var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
+
+		$.get(url, function(data) {
+			var translated_msg = data[0][0][0];
+			console.log(data);
+
+			$("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + translated_msg + "</p></div>");
+	    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+		})
 	});
 
 	socket.on('user left room', function(msg) {
@@ -68,6 +106,13 @@ window.onload = function() {
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 		updateOnlineUsers(msg);
 	});
+
+	socket.on('changed user properties', function(msg) {
+		console.log("F");
+		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.old_username + "</strong> changed name to </font>" + msg.new_username + "</p></div>");
+		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+		updateOnlineUsers(msg)
+	})
 
 
 

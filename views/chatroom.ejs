@@ -5,19 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chatterbox</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  
     <script src="/js/jscolor.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chatroom.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <script>
+
     // initialized here since param cannot be accessed outside ejs file
     var room_id = "<%= room_id %>";
+    var username = "<%= my_nickname %>";
+    var my_language = "<%= my_language %>";
+    var is_first_user = "<%= is_first_user %>"
+
+
+/*
+    if (username == "") {
+      renderModal();
+    }*/
+
   </script>
-  <body class="animated bounceInUp">
+  <body>
 
       <!-- navbar -->
       <nav class="navbar navbar-default">
@@ -32,7 +47,6 @@
           </div>
         </div>
       </nav>
-
 
       <div class="container-fluid fill">
         <div class="row">
@@ -83,6 +97,25 @@
           <a href="https://github.com/vkandamath/chatterbox/"><img src="/img/github-icon.png" style="bottom:10px"/></a><hr>
           <span class="text-muted">Created by Vyshakh Kandamath. Made with Node.js, Express.js, Socket.io, Bootstrap, Animate.css, jscolor and </span><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span class="text-muted">.</span>
         </div>     
+      </div>
+
+
+      <!-- Modal -->
+      <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+                Nickname: <input type="text" name="nickname" id="modal-nickname"><br>
+                Language:&nbsp
+                <select name="language" id="modal-lang">
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                </select><br>
+                <button value="Join Chat" onclick="setUserProperties()">Join Chat</button>
+            </div>
+          </div>
+        </div>
       </div>
   </body>
 </html>

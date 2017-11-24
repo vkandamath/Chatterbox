@@ -93,8 +93,8 @@ window.onload = function() {
 		var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
 
 		$.get(url, function(data) {
-			var translated_msg = data[0][0][0];
 			console.log(data);
+			var translated_msg = data[0][0][0];
 
 			$("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + translated_msg + "</p></div>");
 	    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;

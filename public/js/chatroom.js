@@ -91,7 +91,7 @@ window.onload = function() {
 		var dest_lang_code = lang_codes[dest_lang]
 
 		var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
-
+		console.log(url);
 		$.get(url, function(data) {
 			console.log(data);
 			var translated_msg = data[0][0][0];

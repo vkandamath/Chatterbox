@@ -290,7 +290,7 @@ io.on('connection', function(socket) {
 							}
 							else {
 								// if last member leaves, delete chatroom						
-								if (chatroom.members.length == 1) {
+								if (chatroom != null && chatroom.members.length == 1) {
 									// TODO: remove any references to chatroom (users, msgs..)
 									chatroom.remove()
 								}	

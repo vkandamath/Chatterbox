@@ -38,17 +38,17 @@ function sendMessage() {
 	}
 }
 
-function updateOnlineUsers(msg) {
+function updateOnlineUsers(room_members) {
 
-	console.log(msg);
 	// constructs html for list of online users
 	var users_html = "";
 
-	msg.room_members.forEach(function(member) {
+	room_members.forEach(function(member) {
 		console.log(member);
-		users_html += "<p><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + member.color_code + "' stroke-width='1' fill='" + member.color_code + "'/></svg>";
+		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + member.color_code + "' stroke-width='1' fill='" + member.color_code + "'/></svg>";
 		users_html += member.username
-		users_html += "</p>"
+		users_html += " (" + member.language + ")"
+		users_html += "</li>"
 	});
 
 	$("#usersOnline ul").html(users_html);
@@ -79,7 +79,7 @@ window.onload = function() {
 		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.username + "</strong> has joined the room.</font></p></div>");
 	    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
-	   	updateOnlineUsers(msg)
+	   	updateOnlineUsers(msg.room_members)
 	});
 
 	socket.on('incoming message', function(msg){
@@ -104,14 +104,14 @@ window.onload = function() {
 	socket.on('user left room', function(msg) {
 		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.username + "</strong> has left the room.</font></p></div>");
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-		updateOnlineUsers(msg);
+		updateOnlineUsers(msg.room_members);
 	});
 
 	socket.on('changed user properties', function(msg) {
 		console.log("F");
 		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.old_username + "</strong> changed name to </font>" + msg.new_username + "</p></div>");
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-		updateOnlineUsers(msg)
+		updateOnlineUsers(msg.room_members)
 	})
 
 

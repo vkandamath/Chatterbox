@@ -222,7 +222,15 @@ io.on('connection', function(socket) {
 
 	socket.on('outgoing message', function(msg) {
 		console.log("received: " + msg)
-		socket.broadcast.to(msg.room_id).emit('incoming message', msg)
+		User.findOne({'socket_id': socket.id}, function (err, user) {
+			if (err) {
+				console.log(err)
+			}
+			else {
+				msg.language = user.language
+				socket.broadcast.to(msg.room_id).emit('incoming message', msg)
+			}
+		});
 	})
 
 	socket.on('set user properties', function(msg) {
@@ -249,7 +257,7 @@ io.on('connection', function(socket) {
 							console.log(err)
 						}
 						else {
-							io.in(room_id).emit("changed user properties", {old_username: old_username, new_username: user.username, language: user.language, room_members: chatroom.members})
+							io.in(room_id).emit("changed user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
 						}
 					})
 				})

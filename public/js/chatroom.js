@@ -26,7 +26,7 @@ function sendMessage() {
 		$("#message").val('');
 		$("#messages").append("<div style='text-align: right'><p class='my-message' style='color: " + color_code + "'><strong>Me:</strong> " + message + "</p></div>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-   		socket.emit('outgoing message', {message: message, username: username, color_code: color_code, socket_id: socket.id, room_id: room_id, language: my_language});
+   		socket.emit('outgoing message', {message: message, username: username, color_code: color_code, socket_id: socket.id, room_id: room_id});
 	}
 	else {
 		var button = $("#sendMessage");

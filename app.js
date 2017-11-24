@@ -221,7 +221,9 @@ io.on('connection', function(socket) {
 	})
 
 	socket.on('outgoing message', function(msg) {
-		console.log("received: " + msg)
+		console.log("received: " + JSON.stringify(msg))
+		console.log(msg.socket_id)
+		console.log(socket.id)
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
 				console.log(err)

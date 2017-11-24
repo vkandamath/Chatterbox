@@ -249,7 +249,7 @@ io.on('connection', function(socket) {
 							console.log(err)
 						}
 						else {
-							io.in(room_id).emit("changed user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
+							io.in(room_id).emit("changed user properties", {old_username: old_username, new_username: user.username, language: user.language, room_members: chatroom.members})
 						}
 					})
 				})

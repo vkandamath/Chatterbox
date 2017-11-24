@@ -287,9 +287,8 @@ io.on('connection', function(socket) {
 								console.log(err)
 							}
 							else {
-
 								// if last member leaves, delete chatroom						
-								if (chatroom.members != null && chatroom.members.length == 1) {
+								if (chatroom.members.length == 1) {
 									// TODO: remove any references to chatroom (users, msgs..)
 									chatroom.remove()
 								}	

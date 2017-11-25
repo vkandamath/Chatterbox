@@ -40,9 +40,9 @@ var userShema = Schema({
 
 var chatroomSchema = Schema({
 	_id: {
-    type: String,
-    'default': shortid.generate
-},
+	    type: String,
+	    'default': shortid.generate
+	},
 	members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 })
 

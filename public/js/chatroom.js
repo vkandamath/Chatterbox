@@ -1,14 +1,6 @@
 var socket = io();
 var color_code;
 
-// Language codes
-var lang_codes = {
-	English: "en",
-	French: "fr",
-	German: "de",
-	Italian: "it",
-	Spanish: "es",
-}
 
 function setUserProperties() {
 	var nickname = $("#modal-nickname").val()
@@ -26,7 +18,7 @@ function sendMessage() {
 		$("#message").val('');
 		$("#messages").append("<div style='text-align: right'><p class='my-message' style='color: " + color_code + "'><strong>Me:</strong> " + message + "</p></div>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-   		socket.emit('outgoing message', {message: message, username: username, color_code: color_code, socket_id: socket.id, room_id: room_id});
+   		socket.emit('outgoing message', {message: message, color_code: color_code, room_id: room_id});
 	}
 	else {
 		var button = $("#sendMessage");
@@ -84,22 +76,14 @@ window.onload = function() {
 
 	socket.on('incoming message', function(msg){
 
-		var src_lang = msg.language;
-		var dest_lang = my_language;
+		socket.emit('translate message', msg);
 
-		var src_lang_code = lang_codes[src_lang]
-		var dest_lang_code = lang_codes[dest_lang]
-
-		var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
-		console.log(url);
-		$.get(url, function(data) {
-			console.log(data);
-			var translated_msg = data[0][0][0];
-
-			$("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + translated_msg + "</p></div>");
-	    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
-		})
 	});
+
+	socket.on('incoming translated message', function(msg) {
+		$("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + msg.translated_msg + "</p></div>");
+	    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+	})
 
 	socket.on('user left room', function(msg) {
 		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.username + "</strong> has left the room.</font></p></div>");

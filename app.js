@@ -1,49 +1,19 @@
-// Server side script
-var express = require('express')
-var app = require('express')()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
-var mongoose = require ("mongoose")
-var bodyParser = require('body-parser')
-var multer = require('multer') // v1.0.5
-var upload = multer() // for parsing multipart/form-data
-var cookieParser = require('cookie-parser')
-var fs = require('fs');
+// Importing packages
+var express = require('express'),
+	app = require('express')(),
+	server = require('http').Server(app),
+	io = require('socket.io')(server),
+	mongoose = require ("mongoose"),
+	bodyParser = require('body-parser'),
+	multer = require('multer'),
+	upload = multer()
+	fs = require('fs'),
+	request = require('request')
 
+	var shortid = require('shortid');
+
+// Mongodb setup
 var mongoUri = process.env.MONGOLAB_URI
-
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-
-console.log(process.env)
-
-var session = require("express-session")({
-    secret: "my-secret",
-    resave: true,
-    saveUninitialized: true
-})
-var sharedsession = require("express-socket.io-session")
-
-// Use express-session middleware for express
-app.use(session)
-
-// Use shared session middleware for socket.io
-// setting autoSave:true
-io.use(sharedsession(session, {
-    autoSave:true
-})) 
-
-
-app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-
-// Set up server port
-server.listen(process.env.PORT, function(){
-  console.log('listening on *:' + process.env.PORT)
-})
-
-
-/* Connect to MongoDb */
 mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
 	if (err) {
 		console.log ('ERROR connecting to: ' + mongoUri + '. ' + err)
@@ -54,10 +24,7 @@ mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
 	}
 })
 
-/* Storing language codes */
-
-/* Defining schemes */
-
+// Defining schemas
 var Schema = mongoose.Schema
 
 var userShema = Schema({
@@ -68,12 +35,15 @@ var userShema = Schema({
 	language: String,
 	color_code: String,
 	messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
-	chatroom: {type: Schema.Types.ObjectId, ref: 'Chatroom'}
+	chatroom: {type: String, ref: 'Chatroom'}
 })
 
 var chatroomSchema = Schema({
-	members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
-	// may need to add messages reference here when retrieving message history
+	_id: {
+    type: String,
+    'default': shortid.generate
+},
+	members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 })
 
 var messageSchema = Schema({
@@ -81,12 +51,39 @@ var messageSchema = Schema({
 	time_stamp: { type: Date, default: Date.now }
 })
 
-/* Creating data models here */
-
+// Defining data models
 var User = mongoose.model('User', userShema)
 var Chatroom = mongoose.model('Chatroom', chatroomSchema)
 var Message = mongoose.model('Messsage', messageSchema) 
 
+// Language codes
+var lang_codes = {
+	English: "en",
+	French: "fr",
+	German: "de",
+	Italian: "it",
+	Spanish: "es",
+}
+
+var session = require("express-session")({
+    secret: "my-secret",
+    resave: true,
+    saveUninitialized: true
+})
+
+// Server configuration
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
+app.use(session)
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Set up server port
+server.listen(process.env.PORT, function(){
+  console.log('listening on *:' + process.env.PORT)
+})
+
+// Ensures that connection is https
 app.get("*", function (req, res, next) {
 	if(req.headers['x-forwarded-proto'] != 'https' && process.env.NODE_ENV == "production")
     	res.redirect('https://' + process.env.HOSTNAME + req.url)
@@ -101,10 +98,10 @@ app.get('/', function (req, res) {
 })
 
 // Create new chatroom and redirects user
-app.get('/chatroom', function (req, res, next) {
+app.get('/room', function (req, res, next) {
 
-	console.log("here: " + req.header('Referer'))
-	console.log((process.env.HOSTNAME + "/"))
+	//console.log("here: " + req.header('Referer'))
+	//console.log((process.env.HOSTNAME + "/"))
 
 	// To prevent direct url access 
 	//if (req.header('Referer') != (process.env.HOSTNAME + "/")) {
@@ -123,20 +120,20 @@ app.get('/chatroom', function (req, res, next) {
 				res.send("Error creating chatroom!")
 			}
 			else {
-				res.redirect("/chatroom/" + newChatroom._id)
+				res.redirect("/room/" + newChatroom._id)
 			}
 		})
 	//}
 })
 
 // Renders chatroom with room_id to user
-app.get('/chatroom/:room_id', function (req, res) {
-
-	console.log("hello world")
+app.get('/room/:room_id', function (req, res) {
 
 	var room_id = req.params.room_id
 	var my_nickname = req.session.my_nickname
 	var my_language = req.session.my_language
+
+	req.session.destroy()
 
 	Chatroom
 		.findById(room_id)
@@ -172,6 +169,7 @@ io.on('connection', function(socket) {
 	var room_id
 
 	socket.on('joined room', function(msg) {
+
 
 		var user_selected_username = true;
 		
@@ -221,22 +219,57 @@ io.on('connection', function(socket) {
 	})
 
 	socket.on('outgoing message', function(msg) {
-		console.log("received: " + JSON.stringify(msg))
-		console.log(msg.socket_id)
-		console.log(socket.id)
+		//console.log("received: " + JSON.stringify(msg))
+		//console.log(msg.socket_id)
+		//console.log(socket.id)
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
 				console.log(err)
 			}
 			else {
 				msg.language = user.language
+				msg.username = user.username
 				socket.broadcast.to(msg.room_id).emit('incoming message', msg)
 			}
 		});
 	})
 
+	socket.on('translate message', function(msg) {
+		var src_lang = msg.language;
+		var src_lang_code = lang_codes[src_lang]
+
+		User.findOne({'socket_id': socket.id}, function (err, user) {
+			if (err) {
+				console.log(err)
+			}
+			else {
+				var dest_lang = user.language;
+				var dest_lang_code = lang_codes[dest_lang]
+
+				var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
+				console.log(url)
+
+				request(url, function(err, response, body) {
+					if (err) {
+						console.log(err)
+					}
+					else if (response.statusCode == 200) {
+						body = JSON.parse(body)
+						console.log(body);
+						msg.translated_msg = body[0][0][0]
+						socket.emit('incoming translated message', msg)
+					}
+					else {
+						console.log("ERROR: bad response")
+					}
+				})
+			}
+		})
+
+	})
+
 	socket.on('set user properties', function(msg) {
-		console.log("setting user properties: " + msg.nickname)
+		//console.log("setting user properties: " + msg.nickname)
 
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
@@ -265,13 +298,44 @@ io.on('connection', function(socket) {
 				})
 			}
 		});
-
-
-		//User.update({ 'socket_id': socket.id}, {username: msg.nickname, language: msg.language})
 	})
 
 	socket.on('disconnect', function() {
-		console.log(room_id)
+
+		Chatroom.findById(room_id).
+		populate('members').
+		exec(function(err, chatroom) {
+			if (err) {
+				console.log(err)
+			}
+			else if (chatroom != null) {
+				User.findOne({'socket_id':socket.id}, function (err, user) {
+					if (err) {
+						console.log(err)
+					}
+					else if (user != null) {
+						if (chatroom.members.length == 1) {
+							chatroom.remove()
+						}
+						else {
+							chatroom.members.pull(user)
+							chatroom.save(function (err) {
+								if (err) {
+									console.log(err)
+								}
+								else {
+									io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
+								}
+							})
+						}
+					}
+				})
+			}
+		})
+	})
+
+/*
+
 		User.findOne({ 'socket_id': socket.id }, function (err, user) {
 			if (err) {
 				console.log(err)
@@ -288,9 +352,9 @@ io.on('connection', function(socket) {
 							if (err) {
 								console.log(err)
 							}
-							else {
+							else if chatroom != null {
 								// if last member leaves, delete chatroom						
-								if (chatroom != null && chatroom.members.length == 1) {
+								if (chatroom.members.length == 1) {
 									// TODO: remove any references to chatroom (users, msgs..)
 									chatroom.remove()
 								}	
@@ -319,7 +383,7 @@ io.on('connection', function(socket) {
 					}
 				})
 
-			
+			*/
 
 				//hatroom.update({_id: chatroom})
 /*
@@ -330,9 +394,7 @@ io.on('connection', function(socket) {
 				}
 				delete usersOnline[socket.id]
 				io.emit('disconnected', {userid: username, usersOnline: usersOnline})*/
-			}
-		})
-	})
+			
 
 	//var colorCode = generateColorCode()
 

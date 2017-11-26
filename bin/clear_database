@@ -1,0 +1,17 @@
+#! /app/bin/node
+
+function clearDatabase() {
+	var mongoUri = process.env.MONGOLAB_URI
+	mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
+		if (err) {
+			console.log ('ERROR connecting to: ' + mongoUri + '. ' + err)
+		} 
+		else {
+			// Drop the current database
+			mongoose.connection.db.dropDatabase()
+		}
+	})
+}
+
+clearDatabase();
+process.exit();

@@ -11,15 +11,10 @@
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover {
-    color: white;
-}
-
-.navbar-brand,
-.navbar-brand:hover {
+  color: white;
+  background-color: #23BAA0;
   width: 200px;
   text-align: center;
-  margin: 0px;
-  background-color: #23BAA0;
   font-family: "Blenda";
   font-size: 24px;
 }
@@ -45,6 +40,14 @@
   width: calc(100vw - 200px);
 }
 
+#user-is-typing {
+  position: fixed;
+  width: calc(100vw - 200px);
+  bottom: 40px;
+  right: 0;
+  padding-left: 20px;
+}
+
 #enter-message-input-group {
   position: fixed;
   width: calc(100vw - 200px);
@@ -56,9 +59,6 @@
   border: none;
 }
 
-#online-users {
-  text-align: center;
-}
 
 #online-users ul {
 
@@ -76,6 +76,34 @@
   padding: 25px;
   overflow-y: auto;
   height: 100%;
+}
+
+#send-message-btn {
+  border-radius: 0px;
+  border: none;
+  background-color: #23BAA0;
+}
+
+#send-message-btn:hover {
+  background-color: #177C6C;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+.log-event {
+  text-align: center;
+  color: #8f9dbd;
+}
+
+.message-bubble {
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: white;
+  border-radius: 50px;
+  font-family: Helvetica;
 }
 
 @media only screen and (max-width: 768px) {

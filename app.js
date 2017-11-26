@@ -184,6 +184,8 @@ io.on('connection', function(socket) {
 
 	socket.on('joined room', function(msg) {
 
+		console.log("RECEIVED: " + msg.color_code)
+
 		socket.handshake.session.socket_id = socket.id;
         socket.handshake.session.save();
 
@@ -200,7 +202,7 @@ io.on('connection', function(socket) {
 			msg.my_language = "English"
 		}
 		
-		var new_user = new User({ socket_id: socket.id, username: msg.username, language: msg.my_language, color_code: "#000000", chatroom: room_id})
+		var new_user = new User({ socket_id: socket.id, username: msg.username, language: msg.my_language, color_code: msg.color_code, chatroom: room_id})
 		new_user.save(function (err) {
 			if (err) {
 				console.log(err)
@@ -227,7 +229,7 @@ io.on('connection', function(socket) {
 									socket.join(room_id)
 
 									// Sending to everyone including sender
-									io.in(room_id).emit("user joined room", {socket_id: socket.id, username: new_user.username, room_id: room_id, room_members: chatroom.members})
+									io.in(room_id).emit("user joined room", {socket_id: socket.id, username: new_user.username, color_code: msg.color_code, room_id: room_id, room_members: chatroom.members})
 								}
 							}) 
 						}
@@ -317,6 +319,18 @@ io.on('connection', function(socket) {
 				})
 			}
 		});
+	})
+
+	socket.on('user is typing', function(msg) {
+		console.log('user is typing')
+
+		//sends to everyone except the user who is typing
+		socket.to(room_id).emit('user is typing', msg)
+	})
+
+	socket.on('user is not typing', function(msg) {
+		console.log('user is not typing')
+		socket.to(room_id).emit('user is not typing', msg)
 	})
 
 	socket.on('disconnect', function() {
@@ -460,16 +474,6 @@ io.on('connection', function(socket) {
 	}) */
 })
 
-// Helper function to retrieve random color code
-function generateColorCode() {
-	var allValues = "ABCDEF1234567890"
-	var colorCode = "#"
-	for (var i = 0; i < 6; i++) {
-		var index = Math.floor(Math.random()*allValues.length)
-    	colorCode += allValues[index]
-	}
-  return colorCode
-}
 
 
 

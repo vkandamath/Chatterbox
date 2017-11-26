@@ -39,11 +39,23 @@
 
         <form class="navbar-form navbar-left">
           <div class="form-group">
+            <label for="nickname">Nickname: </label>
+            <input type="text" class="form-control" placeholder="Nickname" id="nickname">
+          
             <input type="text" class="form-control" readonly id="current-url">
+            <button type="button" class="btn btn-default" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
           </div>
-          <button type="button" class="btn btn-default" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
         </form>
 
+        <form class="navbar-form navbar-right">
+          <label for="language">Language: </label>
+          <select class="form-control" id="language">
+            <option>English</option>
+            <option>Spanish</option>
+            <option>French</option>
+            <option>German</option>
+          </select>
+        </form>
       </div>
     </nav>
 
@@ -61,10 +73,12 @@
 
         </div>
 
+        <div id="user-is-typing">
+        </div>
         <div class="input-group" id="enter-message-input-group">
           <input type="text" class="form-control" id="enter-message" style="height: 40px;" placeholder="Start typing!">
           <span class="input-group-btn">
-            <button class="btn btn-primary" onclick="sendMessage()" id="sendMessage" style="height: 40px">Send</button>
+            <button class="btn btn-primary" onclick="sendMessage()" id="send-message-btn" style="height: 40px">Send</button>
           </span>
         </div>
       </div>

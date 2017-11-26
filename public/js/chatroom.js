@@ -1,11 +1,36 @@
 var socket = io()
 
-var color_code;
+var color_code
 
-function copyLink() {
-
+// Helper function to retrieve random color code
+function generateColorCode() {
+	var allValues = "ABCDEF1234567890"
+	var colorCode = "#"
+	for (var i = 0; i < 6; i++) {
+		var index = Math.floor(Math.random()*allValues.length)
+    	colorCode += allValues[index]
+	}
+  return colorCode
 }
 
+function appendMessage(message, color_code, is_my_message) {
+	console.log("appending")
+	var message_bubble = "<div class='message-bubble' style='background-color: " + color_code + ";" 
+
+	if (is_my_message) {
+		message_bubble += " float: right;'"
+	}
+	else {
+		message_bubble += " float: left;'"
+	}
+
+	message_bubble += ">" + message + "</div><br><br><br>"
+
+	console.log(message_bubble)
+
+	$("#messages").append(message_bubble);
+	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+}
 
 function setUserProperties() {
 	var nickname = $("#modal-nickname").val()
@@ -21,8 +46,8 @@ function sendMessage() {
 	var message = $("#enter-message").val();
 	if (message != '') {
 		$("#enter-message").val('');
-		$("#messages").append("<div style='text-align: right'><p class='my-message' style='color: " + color_code + "'><strong>Me:</strong> " + message + "</p></div>");
-    	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+
+		appendMessage(message, color_code, true)
    		socket.emit('outgoing message', {message: message, color_code: color_code, room_id: room_id});
 	}
 }
@@ -34,7 +59,7 @@ function updateOnlineUsers(room_members) {
 
 	room_members.forEach(function(member) {
 		console.log(member);
-		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='red' stroke-width='1' fill='red'/></svg>";
+		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + member.color_code + "' stroke-width='1' fill='" + member.color_code + "'/></svg>";
 		users_html += member.username
 		users_html += " (" + member.language + ")"
 		users_html += "</li>"
@@ -45,6 +70,23 @@ function updateOnlineUsers(room_members) {
 
 
 window.onload = function() {
+
+	var timer;
+
+	// User is typing
+	$("#enter-message").keydown(function (e) {
+		socket.emit('user is typing', {username, username});
+		window.clearTimeout(timer);
+	});
+
+	// User is not typing
+	$("#enter-message").keyup(function (e) {
+
+		timer = window.setTimeout(function() {
+			socket.emit('user is not typing', {username, username});
+		}, 2500);
+		
+	});
 
 	new Clipboard('#copy-link-btn');
 
@@ -58,7 +100,11 @@ window.onload = function() {
 		$("#myModal").modal('show')
 	}
 
-	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language});
+	color_code  = generateColorCode()
+
+	console.log("GENERATED: " + color_code)
+
+	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code});
 
 	$("#enter-message").keypress(function (e) {
 		// Hit enter to send
@@ -70,7 +116,7 @@ window.onload = function() {
 	socket.on('user joined room', function(msg) {
 		console.log("user " + msg.username + " joined");
 
-		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.username + "</strong> has joined the room.</font></p></div>");
+		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.username + "</strong> has joined the room.</p>");
 	    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 
 	   	updateOnlineUsers(msg.room_members)
@@ -83,22 +129,29 @@ window.onload = function() {
 	});
 
 	socket.on('incoming translated message', function(msg) {
-		$("#messages").append("<div><p class='messageOf-" + msg.socketid + "' style='color:" + msg.color_code + "'><strong>" + msg.username + "</strong>: " + msg.translated_msg + "</p></div>");
-	    $("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+		console.log(msg);
+		appendMessage(msg.translated_msg, msg.color_code, false)
 	})
 
 	socket.on('user left room', function(msg) {
-		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.username + "</strong> has left the room.</font></p></div>");
+		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.username + "</strong> has left the room.</p>");
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 		updateOnlineUsers(msg.room_members);
 	});
 
 	socket.on('changed user properties', function(msg) {
-		console.log("F");
 		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.old_username + "</strong> changed name to </font>" + msg.new_username + "</p></div>");
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 		updateOnlineUsers(msg.room_members)
 	})
+
+	socket.on('user is typing', function(msg) {
+		$("#user-is-typing").html(msg.username + " is typing...")
+	});
+
+	socket.on('user is not typing', function(msg) {
+		$("#user-is-typing").html("")
+	});
 
 
 

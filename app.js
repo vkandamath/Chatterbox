@@ -147,7 +147,7 @@ app.get('/room/:room_id', function (req, res) {
 		.exec(function (err, chatroom) {
 			if (err) {
 				console.log(err)
-					res.redirect('/')
+				res.redirect('/')
 			}
 			else {
 				if (chatroom == null) //chatroom doesn't exist
@@ -184,13 +184,8 @@ io.on('connection', function(socket) {
 
 	socket.on('joined room', function(msg) {
 
-		console.log("RECEIVED: " + msg.color_code)
-
-		socket.handshake.session.socket_id = socket.id;
-        socket.handshake.session.save();
-
-        console.log(socket.handshake.session)
-
+		//socket.handshake.session.socket_id = socket.id;
+        //socket.handshake.session.save();
 
 		var user_selected_username = true;
 		
@@ -208,7 +203,6 @@ io.on('connection', function(socket) {
 				console.log(err)
 			} 
 			else {
-				console.log("New user with socketid/username: " + socket.id + " created")
 
 				Chatroom.findById(room_id).
 				populate('members').
@@ -240,9 +234,7 @@ io.on('connection', function(socket) {
 	})
 
 	socket.on('outgoing message', function(msg) {
-		//console.log("received: " + JSON.stringify(msg))
-		//console.log(msg.socket_id)
-		//console.log(socket.id)
+
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
 				console.log(err)
@@ -268,7 +260,6 @@ io.on('connection', function(socket) {
 				var dest_lang_code = lang_codes[dest_lang]
 
 				var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + src_lang_code + "&tl=" + dest_lang_code + "&dt=t&q=" + encodeURI(msg.message);
-				console.log(url)
 
 				request(url, function(err, response, body) {
 					if (err) {
@@ -276,7 +267,6 @@ io.on('connection', function(socket) {
 					}
 					else if (response.statusCode == 200) {
 						body = JSON.parse(body)
-						console.log(body);
 						msg.translated_msg = body[0][0][0]
 						socket.emit('incoming translated message', msg)
 					}
@@ -290,7 +280,6 @@ io.on('connection', function(socket) {
 	})
 
 	socket.on('set user properties', function(msg) {
-		//console.log("setting user properties: " + msg.nickname)
 
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
@@ -298,7 +287,6 @@ io.on('connection', function(socket) {
 			}
 			else {
 				var old_username = user.username
-				console.log("OLD: " + old_username)
 				user.username = msg.nickname
 				user.language = msg.language
 				user.save(function(err) {
@@ -322,14 +310,12 @@ io.on('connection', function(socket) {
 	})
 
 	socket.on('user is typing', function(msg) {
-		console.log('user is typing')
 
 		//sends to everyone except the user who is typing
 		socket.to(room_id).emit('user is typing', msg)
 	})
 
 	socket.on('user is not typing', function(msg) {
-		console.log('user is not typing')
 		socket.to(room_id).emit('user is not typing', msg)
 	})
 
@@ -347,20 +333,17 @@ io.on('connection', function(socket) {
 						console.log(err)
 					}
 					else if (user != null) {
-						if (chatroom.members.length == 1) {
-							chatroom.remove()
-						}
-						else {
-							chatroom.members.pull(user)
-							chatroom.save(function (err) {
-								if (err) {
-									console.log(err)
-								}
-								else {
-									io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
-								}
-							})
-						}
+
+						chatroom.members.pull(user)
+						chatroom.save(function (err) {
+							if (err) {
+								console.log(err)
+							}
+							else {
+								io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
+							}
+						})
+
 					}
 				})
 			}

@@ -44,17 +44,23 @@ var chatroomSchema = Schema({
 	    'default': shortid.generate
 	},
 	members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+	log_events: [{ type: Schema.Types.ObjectId, ref: 'Logevent' }]
 })
 
-var messageSchema = Schema({
+var log_types = ["message", "action"]
+
+var logeventSchema = Schema({
+	_type: {type: String, enum: log_types}, //types: message, action
 	user: { type: Schema.Types.ObjectId, ref: 'User' },
-	time_stamp: { type: Date, default: Date.now }
+	time_stamp: { type: Date, default: Date.now },
+	contents: String, // message or action,
+	chatroom: {type: String, ref: 'Chatroom'}
 })
 
 // Defining data models
 var User = mongoose.model('User', userShema)
 var Chatroom = mongoose.model('Chatroom', chatroomSchema)
-var Message = mongoose.model('Messsage', messageSchema) 
+var Logevent = mongoose.model('Logevent', logeventSchema) 
 
 // Language codes
 var lang_codes = {
@@ -70,6 +76,8 @@ var session = require("express-session")({
     resave: true,
     saveUninitialized: true
 })
+
+var sharedsession = require("express-socket.io-session");
 
 // Server configuration
 app.set('view engine', 'ejs')
@@ -133,8 +141,6 @@ app.get('/room/:room_id', function (req, res) {
 	var my_nickname = req.session.my_nickname
 	var my_language = req.session.my_language
 
-	req.session.destroy()
-
 	Chatroom
 		.findById(room_id)
 		.populate('members')
@@ -164,11 +170,24 @@ app.get('/*', function (req, res) {
 	res.redirect('/')
 })
 
+// Use shared session middleware for socket.io
+// setting autoSave:true
+io.use(sharedsession(session, {
+    autoSave:true
+})); 
+
 io.on('connection', function(socket) { 
 
 	var room_id
 
+	socket.emit("sessiondata", socket.handshake.session)
+
 	socket.on('joined room', function(msg) {
+
+		socket.handshake.session.socket_id = socket.id;
+        socket.handshake.session.save();
+
+        console.log(socket.handshake.session)
 
 
 		var user_selected_username = true;

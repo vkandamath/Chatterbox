@@ -10,6 +10,7 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
   
     <script src="/js/jscolor.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -18,105 +19,57 @@
     <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
   </head>
   <script>
-
     // initialized here since param cannot be accessed outside ejs file
     var room_id = "<%= room_id %>";
     var username = "<%= my_nickname %>";
     var my_language = "<%= my_language %>";
     var is_first_user = "<%= is_first_user %>"
 
-
-/*
-    if (username == "") {
-      renderModal();
-    }*/
-
   </script>
+
   <body>
-
-      <!-- navbar -->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid" style="margin-left: 40%">
-          <div class="navbar-header">
-            <div class="navbar-brand">
-              <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-              <a href="" style="color: #337AB7;">
-                Chatterbox - Chat Anonymously - Room:
-              </a> <%= room_id %>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div class="container-fluid fill">
-        <div class="row">
-          <div class="col-xs-8 col-md-8 col-lg-8" id="messages-container">
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                Messages
-              </div>
-              <div class="panel-body" id="messages">
-              </div>
-              <div class="panel-footer" id="user-typing">
-                &nbsp
-              </div>
-            </div>
-          </div>
-          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="panel panel-success">
-              <div class="panel-heading">
-                Users Online
-              </div>
-              <div class="panel-body" id="usersOnline">
-                <ul></ul>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <div class="row" id="input-container">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="input-group">
-              <span class="input-group-addon">Nickname: 
-                <input title="Type a new username and hit enter." type="text" id="change-username" size="30" maxlength="30"/>
-              </span>
-              <span class="input-group-addon">
-                Select color: #<input id="color-picker" class="jscolor" size="7" disabled="disabled" onchange="changeColor(this.jscolor)"/>
-              </span>
-              <input type="text" class="form-control" id="message" style="height: 40px;" placeholder="Start typing!">
-              <span class="input-group-btn">
-                <input type="button" class="btn btn-success" id="browse" value="Browse" style="height: 40px">
-                <input type="file" id="upload" style="display: none" onchange="sendImage()" >
-                <button class="btn btn-primary" onclick="sendMessage()" id="sendMessage" style="height: 40px">Send</button>
-              </span>
-            </div>
+  <!-- navbar -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <div class="navbar-brand hidden-xs">
+            Chatlingual
           </div>
         </div>
 
-        <div class="row" id="footer">
-          <a href="https://github.com/vkandamath/chatterbox/"><img src="/img/github-icon.png" style="bottom:10px"/></a><hr>
-          <span class="text-muted">Created by Vyshakh Kandamath. Made with Node.js, Express.js, Socket.io, Bootstrap, Animate.css, jscolor and </span><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span class="text-muted">.</span>
-        </div>     
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
+            <input type="text" class="form-control" readonly id="current-url">
+          </div>
+          <button type="button" class="btn btn-default" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
+        </form>
+
+      </div>
+    </nav>
+
+    <div id="contents-wrapper">
+      <div id="sidebar">
+        <div id="online-users">
+          <ul>
+            <li>fdsf</li>
+          </ul>
+        </div>
       </div>
 
+      <div id="main-content">
+        <div id="messages">
 
-      <!-- Modal -->
-      <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-                Nickname: <input type="text" name="nickname" id="modal-nickname"><br>
-                Language:&nbsp
-                <select name="language" id="modal-lang">
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
-                </select><br>
-                <button value="Join Chat" onclick="setUserProperties()">Join Chat</button>
-            </div>
-          </div>
+        </div>
+
+        <div class="input-group" id="enter-message-input-group">
+          <input type="text" class="form-control" id="enter-message" style="height: 40px;" placeholder="Start typing!">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" onclick="sendMessage()" id="sendMessage" style="height: 40px">Send</button>
+          </span>
         </div>
       </div>
+    </div>
+
   </body>
 </html>
     

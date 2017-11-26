@@ -1,5 +1,10 @@
-var socket = io();
+var socket = io()
+
 var color_code;
+
+function copyLink() {
+
+}
 
 
 function setUserProperties() {
@@ -13,20 +18,12 @@ function setUserProperties() {
 
 function sendMessage() {
 
-	var message = $("#message").val();
+	var message = $("#enter-message").val();
 	if (message != '') {
-		$("#message").val('');
+		$("#enter-message").val('');
 		$("#messages").append("<div style='text-align: right'><p class='my-message' style='color: " + color_code + "'><strong>Me:</strong> " + message + "</p></div>");
     	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
    		socket.emit('outgoing message', {message: message, color_code: color_code, room_id: room_id});
-	}
-	else {
-		var button = $("#sendMessage");
-
-		button.removeClass('animated shake');
-		setInterval(function() {
-			button.addClass('animated shake');
-		}, 1000);
 	}
 }
 
@@ -37,17 +34,22 @@ function updateOnlineUsers(room_members) {
 
 	room_members.forEach(function(member) {
 		console.log(member);
-		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + member.color_code + "' stroke-width='1' fill='" + member.color_code + "'/></svg>";
+		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='red' stroke-width='1' fill='red'/></svg>";
 		users_html += member.username
 		users_html += " (" + member.language + ")"
 		users_html += "</li>"
 	});
 
-	$("#usersOnline ul").html(users_html);
+	$("#online-users ul").html(users_html);
 }
 
 
 window.onload = function() {
+
+	new Clipboard('#copy-link-btn');
+
+	$("#current-url").val(window.location.href)
+	$("#current-url").attr("size", window.location.href.length)
 
 	console.log(is_first_user);
 	console.log(typeof is_first_user)
@@ -58,7 +60,7 @@ window.onload = function() {
 
 	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language});
 
-	$("#message").keypress(function (e) {
+	$("#enter-message").keypress(function (e) {
 		// Hit enter to send
 		if (e.which == 13) {
 			sendMessage();

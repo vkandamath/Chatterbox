@@ -195,6 +195,8 @@ io.on('connection', function(socket) {
 		if (msg.username == "") {
 			msg.username = "Anonymous User"
 			msg.my_language = "English"
+
+			socket.emit("set temp username", msg)
 		}
 		
 		var new_user = new User({ socket_id: socket.id, username: msg.username, language: msg.my_language, color_code: msg.color_code, chatroom: room_id})

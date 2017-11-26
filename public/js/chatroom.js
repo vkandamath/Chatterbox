@@ -34,8 +34,11 @@ function appendMessage(message, color_code, is_my_message) {
 
 function setUserProperties() {
 	var nickname = $("#modal-nickname").val()
+
 	var language = $("#modal-lang").val()
-	console.log(nickname)
+	
+	username = nickname
+	my_language = language
 
 	socket.emit('set user properties', {nickname: nickname, language: language})
 	$("#myModal").modal("hide")
@@ -59,10 +62,8 @@ function updateOnlineUsers(room_members) {
 
 	room_members.forEach(function(member) {
 		console.log(member);
-		users_html += "<li><svg height='15' width='30'><circle cx='10' cy='10' r='4' stroke='" + member.color_code + "' stroke-width='1' fill='" + member.color_code + "'/></svg>";
-		users_html += member.username
-		users_html += " (" + member.language + ")"
-		users_html += "</li>"
+		users_html += "<li><div style='display: inline-block'><svg height='20' width='20'><circle cx='10' cy='10' r='10' stroke-width='0' fill='" + member.color_code + "'/></svg></svg></div>";
+		users_html += "<div style='display: inline-block; text-align: center; margin-left: 10px'><p style='line-height: 75%'>" + member.username + "<br><span style='font-size: 10px'>" + member.language + "</span></p></div></li>"
 	});
 
 	$("#online-users ul").html(users_html);
@@ -71,11 +72,21 @@ function updateOnlineUsers(room_members) {
 
 window.onload = function() {
 
+	$("#join-chat-btn").click(function(){
+		var nickname = $("#modal-nickname").val()
+		if (nickname == "") {
+			$("#modal-nickname").css("border", "1px solid red")
+		}
+		else {
+			setUserProperties()
+		}
+	})
+
 	var timer;
 
 	// User is typing
 	$("#enter-message").keydown(function (e) {
-		socket.emit('user is typing', {username, username});
+		socket.emit('user is typing', {username: username});
 		window.clearTimeout(timer);
 	});
 
@@ -83,12 +94,16 @@ window.onload = function() {
 	$("#enter-message").keyup(function (e) {
 
 		timer = window.setTimeout(function() {
-			socket.emit('user is not typing', {username, username});
+			socket.emit('user is not typing', {username: username});
 		}, 2500);
 		
 	});
 
 	new Clipboard('#copy-link-btn');
+
+	$("#copy-link-btn").click(function() {
+		$("#copy-link-btn").html("Copied!")
+	})
 
 	$("#current-url").val(window.location.href)
 	$("#current-url").attr("size", window.location.href.length)
@@ -97,7 +112,7 @@ window.onload = function() {
 	console.log(typeof is_first_user)
 
 	if (is_first_user == "false") {
-		$("#myModal").modal('show')
+		$("#myModal").modal({backdrop: 'static', keyboard: false})
 	}
 
 	color_code  = generateColorCode()
@@ -140,7 +155,7 @@ window.onload = function() {
 	});
 
 	socket.on('changed user properties', function(msg) {
-		$("#messages").append("<div><p class='animated flash'><font color='black'><strong>" + msg.old_username + "</strong> changed name to </font>" + msg.new_username + "</p></div>");
+		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.old_username + "</strong> changed his/her name to <strong>" + msg.new_username + "</strong></p>");
 		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
 		updateOnlineUsers(msg.room_members)
 	})
@@ -152,6 +167,11 @@ window.onload = function() {
 	socket.on('user is not typing', function(msg) {
 		$("#user-is-typing").html("")
 	});
+
+	socket.on('set temp username', function(msg) {
+		username = msg.username
+		language = msg.my_language
+	})
 
 
 

@@ -107,6 +107,7 @@ app.get('/', function (req, res) {
 
 // Create new chatroom and redirects user
 app.get('/room', function (req, res, next) {
+	console.log("hi");
 
 	//console.log("here: " + req.header('Referer'))
 	//console.log((process.env.HOSTNAME + "/"))

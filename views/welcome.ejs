@@ -4,27 +4,56 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chatterbox</title>
+    <title>ChatLingual</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="/js/jscolor.js"></script>
+    <script src="/js/welcome.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
   </head>
   <body>
+    <div class="background"></div>
+    <div class="overlay"></div>
+    <div class="jumbotron jumbotron-fluid vertical-fluid">
+      <div class="container" id="jumbotron-contents">
+        <div class="row">
+          <div class="col-md-8" id="description-container">
+            <h1>Welcome to <span style="color: #1FC659">ChatLingual</span></h1>
+            <p>Communication shouldn't have barriers. ChatLingual translates messages in real-time and lets you talk to anyone anywhere.</p>
+          </div>
 
-    <div class="container-fluid">
-      <form method="get" action="/room">
-        Nickname: <input type="text" name="nickname" maxlength="22"><br>
-        Language:&nbsp
-        <select name="language">
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-        </select><br>
-        <button type="submit" value="Submit">Create Chatroom</button>
-      </form>
-    </div>  
+          <div class="col-md-4" id="registration-container">
+            <form id="registration-form" action="/room" method="get">
+              <div>Create Room</div>
+              <div class="form-group">
+                <input class="form-control" type="text" id="nickname-input" maxlength="22" required placeholder="Nickname">
+              </div>
+
+              <div class="form-group">
+                <select class="form-control" name="language" id="language-input" required>
+                  <option value="" disabled selected>Language</option>
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="create-chatroom-btn">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+    <div class="container">
+      <span>Created by Vyshakh Kandamath using Node.js.</span>
+    </div>
+  </footer>
+
 
   </body>
 </html>

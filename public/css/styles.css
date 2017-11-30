@@ -1,8 +1,112 @@
-@font-face {
-    font-family: "Blenda";
-    src: url(blenda.otf) format("opentype");
+/* 
+  Turquoise green: #1FC585;
+  Indigo: #272834;
+  Light blue: #209BC5;
+  Light green: #1FC659;
+*/
+
+
+
+.jumbotron {
+  margin-bottom: 0;
 }
 
+.background {
+  position: absolute;
+  background-image: url(/img/map.jpeg);
+  background-size: cover;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 75px;
+  z-index: -1;
+}
+
+.overlay {
+  position: absolute;;
+  background-color: #272834;
+  opacity: 0.85;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 75px;
+}
+
+.vertical-fluid {
+
+  background-color: transparent;
+
+  height: calc(100vh - 75px);
+
+  display: flex;
+  align-items: center;
+}
+
+
+
+#registration-form {
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: white;
+  position: inline;
+  height: 100%;
+}
+
+#registration-form > div {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #1FC659;
+}
+
+#create-chatroom-btn {
+  width: 100%;
+  background-color: #1FC659;
+  border: solid 1px #1FC659;
+  border-radius: 0px;
+}
+
+.form-control {
+  border: solid 1px #1FC659;
+  border-radius: 0px;
+}
+
+
+#registration-container {
+
+}
+
+#description-container {
+  color: white;
+}
+
+input {
+  color: #999999
+}
+
+
+
+select {
+  color: #999999;
+  -webkit-appearance: none;
+  border-radius: none;
+}
+
+.form-group {
+
+}
+
+.footer {
+  height: 75px;
+  background-color: white;
+  color: #1FC659;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+/* Chatroom */
 .navbar-default {
   margin-bottom: 0px;
   border: none;
@@ -12,19 +116,24 @@
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover {
   color: white;
-  background-color: #23BAA0;
+  background-color: #1FC659;
   width: 200px;
   text-align: center;
   font-family: "Blenda";
   font-size: 24px;
 }
 
+#chatroom-language-select {
+  background-color: #1FC659;
+  color: white;
+  text-align-last: center;
+}
 
 
 #sidebar {
   position: fixed;
   height: 100%;
-  background-color: #35415A;
+  background-color: #272834;
   width: 200px;
   padding: 10px;
   word-wrap: break-word;
@@ -81,7 +190,7 @@
 #send-message-btn {
   border-radius: 0px;
   border: none;
-  background-color: #23BAA0;
+  background-color: #1FC659;
 }
 
 #send-message-btn:hover {
@@ -97,14 +206,16 @@
 
 .message-bubble {
   display: inline-block;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   color: white;
   border-radius: 50px;
   font-family: Helvetica;
 }
+
+
 
 .modal-dialog {
   text-align: center;
@@ -114,6 +225,10 @@
 
 .modal-backdrop {
   opacity: 0.8;
+}
+
+#navbar-container {
+  padding-right: 0px;
 }
 
 

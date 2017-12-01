@@ -33,6 +33,7 @@ function appendMessage(message, color_code, is_my_message) {
 }
 
 function setUserProperties() {
+	console.log("setting")
 	var nickname = $("#modal-nickname").val()
 
 	var language = $("#modal-lang").val()
@@ -40,8 +41,7 @@ function setUserProperties() {
 	username = nickname
 	my_language = language
 
-	socket.emit('set user properties', {nickname: nickname, language: language})
-	$("#myModal").modal("hide")
+	socket.emit('set user properties', {nickname: nickname, language: language, is_new_user: true})
 }
 
 function sendMessage() {
@@ -154,9 +154,10 @@ window.onload = function() {
 		updateOnlineUsers(msg.room_members);
 	});
 
-	socket.on('changed user properties', function(msg) {
-		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.old_username + "</strong> changed his/her name to <strong>" + msg.new_username + "</strong></p>");
-		$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight;
+	socket.on('set new user properties', function(msg) {
+		console.log("set new user properties")
+		$("#messages").html("<p class='animated flash log-event'><strong>" + msg.new_username + "</strong> has joined the room.</p>");
+		$("#myModal").modal("hide")
 		updateOnlineUsers(msg.room_members)
 	})
 

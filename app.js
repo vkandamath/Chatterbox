@@ -12,6 +12,8 @@ var express = require('express'),
 
 	var shortid = require('shortid');
 
+
+
 // Mongodb setup
 var mongoUri = process.env.MONGOLAB_URI
 mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
@@ -107,7 +109,6 @@ app.get('/', function (req, res) {
 
 // Create new chatroom and redirects user
 app.get('/room', function (req, res, next) {
-	console.log("hi");
 
 	//console.log("here: " + req.header('Referer'))
 	//console.log((process.env.HOSTNAME + "/"))
@@ -121,6 +122,8 @@ app.get('/room', function (req, res, next) {
 		//TODO: use this later
 		req.session.my_nickname = req.param('nickname')
 		req.session.my_language = req.param('language')
+
+		console.log("Dasd: " + req.param('nickname'))
 
 		var newChatroom = Chatroom()
 		newChatroom.save(function (err) {
@@ -154,6 +157,8 @@ app.get('/room/:room_id', function (req, res) {
 				if (chatroom == null) //chatroom doesn't exist
 					res.redirect('/')
 				else {
+
+					console.log(my_nickname)
 
 					if (chatroom.members.length == 0) //first user
 						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_first_user: true})
@@ -284,6 +289,7 @@ io.on('connection', function(socket) {
 
 	socket.on('set user properties', function(msg) {
 
+
 		User.findOne({'socket_id': socket.id}, function (err, user) {
 			if (err) {
 				console.log(err)
@@ -304,7 +310,7 @@ io.on('connection', function(socket) {
 							console.log(err)
 						}
 						else {
-							io.in(room_id).emit("changed user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
+							io.in(room_id).emit("set new user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
 						}
 					})
 				})
@@ -337,15 +343,20 @@ io.on('connection', function(socket) {
 					}
 					else if (user != null) {
 
-						chatroom.members.pull(user)
-						chatroom.save(function (err) {
-							if (err) {
-								console.log(err)
-							}
-							else {
-								io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
-							}
-						})
+						if (chatroom.members.length == 1) {
+							chatroom.remove()
+						}
+						else {
+							chatroom.members.pull(user)
+							chatroom.save(function (err) {
+								if (err) {
+									console.log(err)
+								}
+								else {
+									io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
+								}
+							})
+						}
 
 					}
 				})

@@ -3,6 +3,7 @@
   Indigo: #272834;
   Light blue: #209BC5;
   Light green: #1FC659;
+  1db954
 */
 
 
@@ -18,7 +19,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 75px;
+  bottom: 0;
   z-index: -1;
 }
 
@@ -29,14 +30,14 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 75px;
+  bottom: 0;
 }
 
 .vertical-fluid {
 
   background-color: transparent;
 
-  height: calc(100vh - 75px);
+  height: 100vh;
 
   display: flex;
   align-items: center;
@@ -98,12 +99,16 @@ select {
 }
 
 .footer {
-  height: 75px;
-  background-color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: transparent;
   color: #1FC659;
   text-align: center;
   display: flex;
   align-items: center;
+  border-top: #505050 solid 1px;
 }
 
 /* Chatroom */

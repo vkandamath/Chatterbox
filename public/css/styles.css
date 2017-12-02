@@ -296,5 +296,6 @@ input {
 
   .vertical-fluid {
     align-items: normal;
+    padding-top: 0px;
   }
 }

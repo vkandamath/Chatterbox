@@ -72,6 +72,7 @@ function updateOnlineUsers(room_members) {
 
 window.onload = function() {
 
+
 	$("#chatroom-nickname").html(username)
 
 	$("#join-chat-btn").click(function(){
@@ -113,7 +114,7 @@ window.onload = function() {
 
 
 	if (on_connect_context == "user joins room for first time") {
-		$("#myModal").modal({backdrop: 'static', keyboard: false})
+		$("#new-user-modal").modal({backdrop: 'static', keyboard: false})
 		color_code  = generateColorCode()
 		socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code});
 	}
@@ -161,7 +162,7 @@ window.onload = function() {
 	socket.on('set new user properties', function(msg) {
 		console.log("set new user properties")
 		$("#messages").html("<p class='animated flash log-event'><strong>" + msg.new_username + "</strong> has joined the room.</p>");
-		$("#myModal").modal("hide")
+		$("#new-user-modal").modal("hide")
 		updateOnlineUsers(msg.room_members)
 	})
 

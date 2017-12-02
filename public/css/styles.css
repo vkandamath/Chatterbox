@@ -80,6 +80,11 @@
 
 #description-container {
   color: white;
+  font-family: "Righteous"
+}
+
+#description-container > p {
+  font-weight: 1;
 }
 
 input {
@@ -124,7 +129,7 @@ select {
   background-color: #1FC659;
   width: 200px;
   text-align: center;
-  font-family: "Blenda";
+  font-family: "Righteous";
   font-size: 24px;
 }
 

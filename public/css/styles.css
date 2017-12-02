@@ -293,4 +293,8 @@ input {
   #language-input {
     text-align-last: center;
   }
+
+  .vertical-fluid {
+    align-items: normal;
+  }
 }

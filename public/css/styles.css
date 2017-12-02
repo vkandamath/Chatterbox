@@ -271,7 +271,11 @@ select {
     margin-bottom: 0;
     display: none;
   }
-  .navbar-default .navbar-brand {
+  .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
     width: 100vw;
+  }
+
+  #description-container {
+    text-align: center;
   }
 }

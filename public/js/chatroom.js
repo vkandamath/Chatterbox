@@ -108,10 +108,9 @@ window.onload = function() {
 	$("#current-url").val(window.location.href)
 	$("#current-url").attr("size", window.location.href.length)
 
-	console.log(is_first_user);
-	console.log(typeof is_first_user)
 
-	if (is_first_user == "false") {
+
+	if (is_creator == "false") {
 		$("#myModal").modal({backdrop: 'static', keyboard: false})
 	}
 

@@ -12,6 +12,8 @@ var express = require('express'),
 
 	var shortid = require('shortid');
 
+var ios = require('socket.io-express-session');
+
 
 
 // Mongodb setup
@@ -79,7 +81,7 @@ var session = require("express-session")({
     saveUninitialized: true
 })
 
-var sharedsession = require("express-socket.io-session");
+io.use(ios(session));
 
 // Server configuration
 app.set('view engine', 'ejs')
@@ -160,10 +162,10 @@ app.get('/room/:room_id', function (req, res) {
 
 					console.log(my_nickname)
 
-					if (chatroom.members.length == 0) //first user
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_first_user: true})
+					if (my_nickname != null) //creator
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_creator: true})
 					else // users who join
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_first_user: false})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_creator: false})
 				}
 			}
 		})
@@ -176,11 +178,6 @@ app.get('/*', function (req, res) {
 	res.redirect('/')
 })
 
-// Use shared session middleware for socket.io
-// setting autoSave:true
-io.use(sharedsession(session, {
-    autoSave:true
-})); 
 
 io.on('connection', function(socket) { 
 
@@ -192,6 +189,10 @@ io.on('connection', function(socket) {
 
 		//socket.handshake.session.socket_id = socket.id;
         //socket.handshake.session.save();
+
+        console.log(socket.id)
+        console.log(socket.handshake.session);
+        console.log("===========================")
 
 		var user_selected_username = true;
 		
@@ -343,10 +344,10 @@ io.on('connection', function(socket) {
 					}
 					else if (user != null) {
 
-						if (chatroom.members.length == 1) {
-							chatroom.remove()
-						}
-						else {
+						//if (chatroom.members.length == 1) {
+						//	chatroom.remove()
+						//}
+						//else {
 							chatroom.members.pull(user)
 							chatroom.save(function (err) {
 								if (err) {
@@ -356,7 +357,7 @@ io.on('connection', function(socket) {
 									io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
 								}
 							})
-						}
+						//}
 
 					}
 				})

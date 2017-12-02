@@ -48,18 +48,13 @@
               
             
               <input type="text" class="form-control" readonly id="current-url">
-              <button type="button" class="btn btn-default" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
+              <button type="button" class="form-control" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
             </div>
           </form>
 
           <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Nickname" id="nickname">
-            <select class="form-control" id="chatroom-language-select">
-              <option>English</option>
-              <option>Spanish</option>
-              <option>French</option>
-              <option>German</option>
-            </select>
+            <div class="form-control" id="chatroom-nickname"></div>
+            <div class="form-control" id="chatroom-language">English</div>
           </form>
 
         </div>

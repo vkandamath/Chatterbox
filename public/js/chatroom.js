@@ -72,6 +72,8 @@ function updateOnlineUsers(room_members) {
 
 window.onload = function() {
 
+	$("#chatroom-nickname").html(username)
+
 	$("#join-chat-btn").click(function(){
 		var nickname = $("#modal-nickname").val()
 		if (nickname == "") {

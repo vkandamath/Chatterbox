@@ -128,7 +128,7 @@ select {
   font-size: 24px;
 }
 
-#chatroom-language-select {
+#chatroom-language {
   background-color: #1FC659;
   color: white;
   text-align-last: center;
@@ -234,6 +234,14 @@ select {
 
 #navbar-container {
   padding-right: 0px;
+}
+
+#copy-link-btn {
+  color: #1FC659;
+}
+
+#chatroom-nickname {
+  color: #1FC659
 }
 
 

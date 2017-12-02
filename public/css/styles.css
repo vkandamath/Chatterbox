@@ -93,11 +93,6 @@ input {
 
 
 
-select {
-  color: #999999;
-  -webkit-appearance: none;
-  border-radius: none;
-}
 
 .form-group {
 
@@ -253,7 +248,10 @@ select {
   color: #1FC659;
 }
 
-
+#language-input {
+  -webkit-appearance: none;
+  border-radius: none;
+}
 
 @media only screen and (max-width: 768px) {
   #sidebar {
@@ -282,5 +280,17 @@ select {
 
   #description-container {
     text-align: center;
+  }
+
+  #registration-form > div {
+    text-align: center;
+  }
+
+  #nickname-input {
+    text-align: center;
+  }
+
+  #language-input {
+    text-align-last: center;
   }
 }

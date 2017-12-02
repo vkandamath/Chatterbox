@@ -110,16 +110,19 @@ window.onload = function() {
 
 
 
-	if (is_new_user == "false") {
+	if (on_connect_context == "user joins room for first time") {
 		$("#myModal").modal({backdrop: 'static', keyboard: false})
+		color_code  = generateColorCode()
+		socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code});
+	}
+	else {
+		color_code  = generateColorCode()
+		socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code});
 	}
 
-	color_code  = generateColorCode()
+	// FUTURE: add in case where user opens same room in another tab
 
-	console.log("GENERATED: " + color_code)
-
-	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code});
-
+	
 	$("#enter-message").keypress(function (e) {
 		// Hit enter to send
 		if (e.which == 13) {

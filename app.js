@@ -124,6 +124,7 @@ app.get('/room', function (req, res, next) {
 		//TODO: use this later
 		req.session.my_nickname = req.param('nickname')
 		req.session.my_language = req.param('language')
+		req.session.creating_room = true
 
 		console.log("Dasd: " + req.param('nickname'))
 
@@ -143,9 +144,11 @@ app.get('/room', function (req, res, next) {
 // Renders chatroom with room_id to user
 app.get('/room/:room_id', function (req, res) {
 
+
 	var room_id = req.params.room_id
 	var my_nickname = req.session.my_nickname
 	var my_language = req.session.my_language
+
 
 	Chatroom
 		.findById(room_id)
@@ -160,12 +163,12 @@ app.get('/room/:room_id', function (req, res) {
 					res.redirect('/')
 				else {
 
-					console.log(my_nickname)
-
-					if (my_nickname != null) //creator
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_new_user: true})
-					else // users who join
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_new_user: false})
+					if (my_nickname == null) // new joiner
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "user joins room for first time"})
+					else if (req.session.creating_room) // creating new room
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "user creating new room"})
+					else //existing users
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "existing user opens new tab"})
 				}
 			}
 		})

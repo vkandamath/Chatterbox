@@ -266,4 +266,12 @@ select {
   #enter-message-input-group {
     width: inherit;
   }
+  .navbar-form {
+    margin-top: 0;
+    margin-bottom: 0;
+    display: none;
+  }
+  .navbar-default .navbar-brand {
+    width: 100vw;
+  }
 }

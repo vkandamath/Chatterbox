@@ -24,7 +24,7 @@ function appendMessage(message, color_code, is_my_message) {
 		message_bubble += " float: left;'"
 	}
 
-	message_bubble += ">" + message + "</div><br><br><br>"
+	message_bubble += ">" + message + "</div><br><br>"
 
 	console.log(message_bubble)
 

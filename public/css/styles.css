@@ -137,6 +137,7 @@ select {
 
 #sidebar {
   position: fixed;
+  top: 50px;
   height: 100%;
   background-color: #272834;
   width: 200px;
@@ -147,6 +148,7 @@ select {
 
 #main-content {
   position: fixed;
+  top: 50px;
   margin-left: 200px;
   padding: 0px;
   background-color: #E9EDF2;
@@ -196,12 +198,12 @@ select {
   border-radius: 0px;
   border: none;
   background-color: #1FC659;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
 }
 
 #send-message-btn:hover {
-  background-color: #177C6C;
-  transition-property: background-color;
-  transition-duration: 0.5s;
+  background-color: #15843c;
 }
 
 .log-event {
@@ -217,7 +219,6 @@ select {
   padding-bottom: 5px;
   color: white;
   border-radius: 50px;
-  font-family: Helvetica;
 }
 
 
@@ -232,16 +233,19 @@ select {
   opacity: 0.8;
 }
 
-#navbar-container {
-  padding-right: 0px;
-}
-
 #copy-link-btn {
   color: #1FC659;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+#copy-link-btn:hover {
+  background-color: #1FC659;
+  color: white;
 }
 
 #chatroom-nickname {
-  color: #1FC659
+  color: #1FC659;
 }
 
 
@@ -259,5 +263,7 @@ select {
     left: 0;
     right: 0;
   }
-
+  #enter-message-input-group {
+    width: inherit;
+  }
 }

@@ -163,9 +163,9 @@ app.get('/room/:room_id', function (req, res) {
 					console.log(my_nickname)
 
 					if (my_nickname != null) //creator
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_creator: true})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_new_user: true})
 					else // users who join
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_creator: false})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, is_new_user: false})
 				}
 			}
 		})
@@ -311,6 +311,9 @@ io.on('connection', function(socket) {
 							console.log(err)
 						}
 						else {
+							socket.handshake.session.my_nickname = msg.nickname
+							socket.handshake.session.my_language = msg.language
+							socket.handshake.session.save()
 							io.in(room_id).emit("set new user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
 						}
 					})

@@ -110,7 +110,7 @@ window.onload = function() {
 
 
 
-	if (is_creator == "false") {
+	if (is_new_user == "false") {
 		$("#myModal").modal({backdrop: 'static', keyboard: false})
 	}
 

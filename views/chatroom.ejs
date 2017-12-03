@@ -89,15 +89,21 @@
               <h3>A multilingual group chat</h3>
             </div>
             <div class="modal-body">
+              <form id="modal-form">
                 <span style="margin-bottom: 10px;">Enter a nickname and select a language to join.</span><br>
-                <input type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="text-align: center; margin-bottom: 10px; margin-top: 10px;">
+                <div class="form-group has-error">
+                  <input required type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="margin-bottom: 10px; margin-top: 10px;">
+                </div>
                
-                <select class="form-control" name="language" id="modal-lang" style="text-align-last: center; margin-bottom: 10px;">
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
-                </select>
-                <button class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
+                <div class="form-group">
+                  <select class="form-control" name="language" id="modal-lang" style="margin-bottom: 10px;" required>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                  </select>
+                </div>
+                <button type="submit" class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
+              </form>
             </div>
           </div>
         </div>

@@ -17,6 +17,22 @@
     <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
   </head>
+  <script>
+    $(document).ready(function() {
+      var error_msg = "<%= error_msg %>";
+      var field = "<%= field %>"
+      if (error_msg) {
+        $("#login-errors").addClass("alert")
+        $("#login-errors").addClass("alert-danger")
+        $("#login-errors").html(error_msg)
+        $("#login-errors").css("color", "#a94442")
+        $("#login-errors").css("font-size", "14px")
+        $("#" + field + "-form-group").addClass("has-error")
+        $("#create-chatroom-btn").css("margin-bottom", "15px")
+        console.log(error_msg)
+      }
+    })
+  </script>
   <body>
     <div class="background"></div>
     <div class="overlay"></div>
@@ -31,12 +47,12 @@
           <div class="col-md-4" id="registration-container">
             <form id="registration-form" action="/room" method="get">
               <div>Create Room</div>
-              <div class="form-group">
-                <input class="form-control" name="nickname" type="text" id="nickname-input" maxlength="13" required placeholder="Nickname">
+              <div class="form-group" id="nickname-input-form-group">
+                <input class="form-control" name="nickname" type="text" id="nickname-input" maxlength="13" placeholder="Nickname">
               </div>
 
-              <div class="form-group">
-                <select class="form-control" name="language" id="language-input" required>
+              <div class="form-group" id="language-input-form-group">
+                <select class="form-control" name="language" id="language-input">
                   <option value="" disabled selected>Language</option>
                   <option value="English">English</option>
                   <option value="Spanish">Spanish</option>
@@ -45,6 +61,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary" id="create-chatroom-btn">Create</button>
+              <div id="login-errors" class=""></div>
             </form>
           </div>
         </div>

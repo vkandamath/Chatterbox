@@ -106,7 +106,7 @@ app.get("*", function (req, res, next) {
 
 // Presents user with homepage
 app.get('/', function (req, res) {
-	res.render('welcome')
+	res.render('welcome', {error_msg: "", field: ""})
 })
 
 // Create new chatroom and redirects user
@@ -122,22 +122,33 @@ app.get('/room', function (req, res, next) {
 	//} 
 	//else {
 		//TODO: use this later
-		req.session.my_nickname = req.param('nickname')
-		req.session.my_language = req.param('language')
-		req.session.creating_room = true
 
-		console.log("Dasd: " + req.param('nickname'))
+		var languages = {"English": true, "Spanish": true, "French": true}
+		// input validation
+		if (!req.param('nickname')) {
+			res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input"})
+		}
+		else if (!languages[req.param('language')]) {
+			res.render('welcome', {error_msg: "Language is invalid!", field: "language-input"})
+		}
+		else {
+			req.session.my_nickname = req.param('nickname')
+			req.session.my_language = req.param('language')
+			req.session.creating_room = true
 
-		var newChatroom = Chatroom()
-		newChatroom.save(function (err) {
-			if (err) {
-				console.log(err)
-				res.send("Error creating chatroom!")
-			}
-			else {
-				res.redirect("/room/" + newChatroom._id)
-			}
-		})
+			console.log("Dasd: " + req.param('nickname'))
+
+			var newChatroom = Chatroom()
+			newChatroom.save(function (err) {
+				if (err) {
+					console.log(err)
+					res.send("Error creating chatroom!")
+				}
+				else {
+					res.redirect("/room/" + newChatroom._id)
+				}
+			})
+		}
 	//}
 })
 

@@ -7,7 +7,7 @@
 */
 
 body {
-  font-family: "Righteous"
+  font-family: "Righteous", "Helvetica"
 }
 
 .jumbotron {
@@ -267,6 +267,10 @@ input {
 #msg-hr {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.user-block span{
+  color: #636883;
 }
 
 @media only screen and (max-width: 768px) {

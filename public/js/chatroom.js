@@ -13,7 +13,7 @@ function generateColorCode() {
   return colorCode
 }
 
-function appendMessage(message, color_code, is_my_message) {
+function appendMessage(username, message, color_code, is_my_message) {
 	console.log("appending")
 	var message_bubble = "<div class='message-bubble' style='background-color: " + color_code + ";" 
 
@@ -24,7 +24,7 @@ function appendMessage(message, color_code, is_my_message) {
 		message_bubble += " float: left;'"
 	}
 
-	message_bubble += ">" + message + "<hr id='msg-hr'><span style='font-weight: 1px'>fsf</span></div><br><br><br>"
+	message_bubble += ">" + message + "<hr id='msg-hr'><span style='font-size: 10px'>" + username + "</span></div><br><br><br>"
 
 	console.log(message_bubble)
 
@@ -50,7 +50,7 @@ function sendMessage() {
 	if (message != '') {
 		$("#enter-message").val('');
 
-		appendMessage(message, color_code, true)
+		appendMessage(username, message, color_code, true)
    		socket.emit('outgoing message', {message: message, color_code: color_code, room_id: room_id});
 	}
 }
@@ -145,7 +145,7 @@ window.onload = function() {
 
 	socket.on('incoming translated message', function(msg) {
 		console.log(msg);
-		appendMessage(msg.translated_msg, msg.color_code, false)
+		appendMessage(msg.username, msg.translated_msg, msg.color_code, false)
 	})
 
 	socket.on('user left room', function(msg) {

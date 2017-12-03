@@ -6,7 +6,9 @@
   1db954
 */
 
-
+body {
+  font-family: "Righteous"
+}
 
 .jumbotron {
   margin-bottom: 0;
@@ -80,7 +82,6 @@
 
 #description-container {
   color: white;
-  font-family: "Righteous"
 }
 
 #description-container > p {
@@ -221,13 +222,23 @@ input {
   border-radius: 50px;
 }
 
-
+#join-chat-btn {
+  background-color: #1FC659;
+  color: white;
+}
 
 .modal-dialog {
   text-align: center;
-  border-radius: 25px;
 }
 
+.modal-content {
+  border-radius: 0px;
+}
+ 
+#modal-lang {
+  -webkit-appearance: none;
+  border-radius: none;
+}
 
 .modal-backdrop {
   opacity: 0.8;
@@ -251,6 +262,11 @@ input {
 #language-input {
   -webkit-appearance: none;
   border-radius: none;
+}
+
+#msg-hr {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 @media only screen and (max-width: 768px) {
@@ -284,14 +300,6 @@ input {
 
   #registration-form > div {
     text-align: center;
-  }
-
-  #nickname-input {
-    text-align: center;
-  }
-
-  #language-input {
-    text-align-last: center;
   }
 
   .vertical-fluid {

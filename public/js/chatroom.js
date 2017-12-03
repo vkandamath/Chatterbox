@@ -24,7 +24,7 @@ function appendMessage(message, color_code, is_my_message) {
 		message_bubble += " float: left;'"
 	}
 
-	message_bubble += ">" + message + "</div><br><br>"
+	message_bubble += ">" + message + "<hr id='msg-hr'><span style='font-weight: 1px'>fsf</span></div><br><br><br>"
 
 	console.log(message_bubble)
 
@@ -74,6 +74,7 @@ window.onload = function() {
 
 
 	$("#chatroom-nickname").html(username)
+	$("#chatroom-language").html(my_language)
 
 	$("#join-chat-btn").click(function(){
 		var nickname = $("#modal-nickname").val()

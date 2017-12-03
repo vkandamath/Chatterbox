@@ -38,7 +38,7 @@
       <div class="container-fluid" id="navbar-container">
         <div class="navbar-header">
           <div class="navbar-brand">
-            Chatlingual
+            ChatLingual
           </div>
         </div>
 
@@ -51,14 +51,14 @@
 
         <form class="navbar-form navbar-right">
           <div class="form-control" id="chatroom-nickname"></div>
-          <div class="form-control" id="chatroom-language">English</div>
+          <div class="form-control" id="chatroom-language"></div>
         </form>
 
       </div>
     </nav>
 
     <div id="contents-wrapper">
-      <div id="sidebar">
+      <div id="sidebar" style="overflow-y: auto">
         <div id="online-users">
           <ul>
           </ul>
@@ -85,19 +85,19 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h1>Welcome to <span style="color: #23BAA0">Chatlingual!</span></h1>
+              <h1>Welcome to <span style="color: #1FC659">ChatLingual!</span></h1>
               <h3>A multilingual group chat</h3>
             </div>
             <div class="modal-body">
                 <span style="margin-bottom: 10px;">Enter a nickname and select a language to join.</span><br>
-                <input type="text" name="nickname" id="modal-nickname" maxlength="22" placeholder="Nickname" style="text-align: center; margin-bottom: 10px; margin-top: 10px; width: 200px"><br>
+                <input type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="text-align: center; margin-bottom: 10px; margin-top: 10px;">
                
-                <select name="language" id="modal-lang" style="text-align-last: center; margin-bottom: 10px; width: 200px">
+                <select class="form-control" name="language" id="modal-lang" style="text-align-last: center; margin-bottom: 10px;">
                   <option value="English">English</option>
                   <option value="Spanish">Spanish</option>
                   <option value="French">French</option>
-                </select><br>
-                <button value="Join Chat" id="join-chat-btn">Join Chat</button>
+                </select>
+                <button class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
             </div>
           </div>
         </div>

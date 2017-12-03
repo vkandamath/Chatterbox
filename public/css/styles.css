@@ -310,4 +310,8 @@ input {
     align-items: normal;
     padding-top: 0px;
   }
+
+  .footer {
+    display: none;
+  }
 }

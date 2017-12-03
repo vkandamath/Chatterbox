@@ -306,10 +306,6 @@ input {
     text-align: center;
   }
 
-  .vertical-fluid {
-    align-items: normal;
-    padding-top: 0px;
-  }
 
   .footer {
     display: none;

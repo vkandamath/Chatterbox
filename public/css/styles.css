@@ -273,6 +273,10 @@ input {
   color: #636883;
 }
 
+.alert {
+  border-radius: 0px;
+}
+
 @media only screen and (max-width: 768px) {
   #sidebar {
     display: none;
@@ -305,7 +309,6 @@ input {
   #registration-form > div {
     text-align: center;
   }
-
 
   .footer {
     display: none;

@@ -163,6 +163,17 @@ window.onload = function() {
 		updateOnlineUsers(msg.room_members)
 	})
 
+	socket.on('could not set new user properties', function(msg) {
+		console.log("could not set new user properties")
+		$("#" + msg.field + "-form-group").addClass("has-error")
+		$("#login-errors").addClass("alert")
+        $("#login-errors").addClass("alert-danger")
+        $("#login-errors").html(msg.error)
+        $("#login-errors").css("color", "#a94442")
+        $("#login-errors").css("font-size", "14px")
+        $("#join-chat-btn").css("margin-bottom", "15px")
+	})
+
 	socket.on('user is typing', function(msg) {
 		$("#user-is-typing").html(msg.username + " is typing...")
 	});

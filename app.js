@@ -14,6 +14,8 @@ var express = require('express'),
 
 var ios = require('socket.io-express-session');
 
+var languages = {"English": true, "Spanish": true, "French": true}
+
 
 
 // Mongodb setup
@@ -122,8 +124,6 @@ app.get('/room', function (req, res, next) {
 	//} 
 	//else {
 		//TODO: use this later
-
-		var languages = {"English": true, "Spanish": true, "French": true}
 		// input validation
 		if (!req.param('nickname')) {
 			res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input", nickname: ""})
@@ -304,36 +304,45 @@ io.on('connection', function(socket) {
 
 	socket.on('set user properties', function(msg) {
 
+		// server side form validation
+		if (!msg.nickname) {
+			socket.emit("could not set new user properties", {error: "Nickname is required!", field: "modal-nickname"})
+		}
+		else if (!languages[msg.language]){
+			socket.emit("could not set new user properties", {error: "Language is invalid!", field: "modal-language"})
+		}
+		else {
 
-		User.findOne({'socket_id': socket.id}, function (err, user) {
-			if (err) {
-				console.log(err)
-			}
-			else {
-				var old_username = user.username
-				user.username = msg.nickname
-				user.language = msg.language
-				user.save(function(err) {
-					if (err) {
-						console.log(err);
-					}
-
-					Chatroom.findById(room_id)
-					.populate('members')
-					.exec(function (err, chatroom) {
+			User.findOne({'socket_id': socket.id}, function (err, user) {
+				if (err) {
+					console.log(err)
+				}
+				else {
+					var old_username = user.username
+					user.username = msg.nickname
+					user.language = msg.language
+					user.save(function(err) {
 						if (err) {
-							console.log(err)
+							console.log(err);
 						}
-						else {
-							socket.handshake.session.my_nickname = msg.nickname
-							socket.handshake.session.my_language = msg.language
-							socket.handshake.session.save()
-							io.in(room_id).emit("set new user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
-						}
+
+						Chatroom.findById(room_id)
+						.populate('members')
+						.exec(function (err, chatroom) {
+							if (err) {
+								console.log(err)
+							}
+							else {
+								socket.handshake.session.my_nickname = msg.nickname
+								socket.handshake.session.my_language = msg.language
+								socket.handshake.session.save()
+								io.in(room_id).emit("set new user properties", {old_username: old_username, new_username: user.username, room_members: chatroom.members})
+							}
+						})
 					})
-				})
-			}
-		});
+				}
+			});
+		}
 	})
 
 	socket.on('user is typing', function(msg) {

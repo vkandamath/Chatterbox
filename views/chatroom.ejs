@@ -91,18 +91,20 @@
             <div class="modal-body">
               <form id="modal-form">
                 <span style="margin-bottom: 10px;">Enter a nickname and select a language to join.</span><br>
-                <div class="form-group has-error">
-                  <input required type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="margin-bottom: 10px; margin-top: 10px;">
+                <div class="form-group" id="modal-nickname-form-group">
+                  <input type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="margin-bottom: 10px; margin-top: 10px;">
                 </div>
                
-                <div class="form-group">
-                  <select class="form-control" name="language" id="modal-lang" style="margin-bottom: 10px;" required>
+                <div class="form-group" id="modal-language-form-group">
+                  <select class="form-control" name="language" id="modal-lang" style="margin-bottom: 10px;">
+                    <option value="" disabled selected>Language</option>
                     <option value="English">English</option>
                     <option value="Spanish">Spanish</option>
                     <option value="French">French</option>
                   </select>
                 </div>
-                <button type="submit" class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
+                <button type="button" class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
+                <div id="login-errors" class=""></div>
               </form>
             </div>
           </div>

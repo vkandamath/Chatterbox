@@ -50,23 +50,13 @@ var chatroomSchema = Schema({
 	    'default': shortid.generate
 	},
 	members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-	log_events: [{ type: Schema.Types.ObjectId, ref: 'Logevent' }]
-})
-
-var log_types = ["message", "action"]
-
-var logeventSchema = Schema({
-	_type: {type: String, enum: log_types}, //types: message, action
-	user: { type: Schema.Types.ObjectId, ref: 'User' },
-	time_stamp: { type: Date, default: Date.now },
-	contents: String, // message or action,
-	chatroom: {type: String, ref: 'Chatroom'}
+	log_messages: [{type: String}]
 })
 
 // Defining data models
 var User = mongoose.model('User', userShema)
 var Chatroom = mongoose.model('Chatroom', chatroomSchema)
-var Logevent = mongoose.model('Logevent', logeventSchema) 
+
 
 // Language codes
 var lang_codes = {
@@ -245,6 +235,14 @@ io.on('connection', function(socket) {
 								else {
 									socket.join(room_id)
 
+									const HISTORY_SIZE_LIMIT = 100;
+									var history = chatroom.log_messages
+
+									if (history.length > 100) {
+										history = chatroom.log_messages[history.length - HISTORY_SIZE_LIMIT]
+									}
+									socket.emit("display chat history", {history: history})
+
 									// Sending to everyone including sender
 									io.in(room_id).emit("user joined room", {socket_id: socket.id, username: new_user.username, color_code: msg.color_code, room_id: room_id, room_members: chatroom.members})
 								}
@@ -263,11 +261,22 @@ io.on('connection', function(socket) {
 				console.log(err)
 			}
 			else {
-				msg.language = user.language
-				msg.username = user.username
-				socket.broadcast.to(msg.room_id).emit('incoming message', msg)
+				Chatroom.findById(msg.room_id, function (err, chatroom) {
+					if (err) {
+						console.log(err)
+					}
+					else {
+						chatroom.log_messages.push("<div class='message-bubble' style='background-color: " + msg.color_code + "; float: left;'>" 
+							+ msg.message + "<hr id='msg-hr'><span style='font-size 10px'>" + user.username + "</span></div><br><br><br>")
+						chatroom.save(function(err) {
+							msg.language = user.language
+							msg.username = user.username
+							socket.broadcast.to(msg.room_id).emit('incoming message', msg)
+						})
+					}
+				});
 			}
-		});
+		})
 	})
 
 	socket.on('translate message', function(msg) {

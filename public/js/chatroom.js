@@ -128,7 +128,14 @@ window.onload = function() {
 		}
 	});
 
+	socket.on('display chat history', function(msg) {
+		msg.history.forEach(function(event) {
+			$("#messages").append(event)
+		})
+	})
+
 	socket.on('user joined room', function(msg) {
+
 		console.log("user " + msg.username + " joined");
 
 		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.username + "</strong> has joined the room.</p>");

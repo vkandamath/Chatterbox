@@ -29,6 +29,7 @@
         $("#login-errors").css("font-size", "14px")
         $("#" + field + "-form-group").addClass("has-error")
         $("#create-chatroom-btn").css("margin-bottom", "15px")
+        $("#nickname-input").val("<%= nickname %>")
         console.log(error_msg)
       }
     })

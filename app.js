@@ -106,7 +106,7 @@ app.get("*", function (req, res, next) {
 
 // Presents user with homepage
 app.get('/', function (req, res) {
-	res.render('welcome', {error_msg: "", field: ""})
+	res.render('welcome', {error_msg: "", field: "", nickname: ""})
 })
 
 // Create new chatroom and redirects user
@@ -126,10 +126,10 @@ app.get('/room', function (req, res, next) {
 		var languages = {"English": true, "Spanish": true, "French": true}
 		// input validation
 		if (!req.param('nickname')) {
-			res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input"})
+			res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input", nickname: ""})
 		}
 		else if (!languages[req.param('language')]) {
-			res.render('welcome', {error_msg: "Language is invalid!", field: "language-input"})
+			res.render('welcome', {error_msg: "Language is invalid!", field: "language-input", nickname: req.param('nickname')})
 		}
 		else {
 			req.session.my_nickname = req.param('nickname')

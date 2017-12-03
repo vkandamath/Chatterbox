@@ -138,13 +138,14 @@ input {
 
 #sidebar {
   position: fixed;
-  top: 50px;
-  height: 100%;
+  top: 50px;  
+  height: calc(100vh - 40px);
   background-color: #272834;
   width: 200px;
   padding: 10px;
   word-wrap: break-word;
   color: white;
+
 }
 
 #main-content {

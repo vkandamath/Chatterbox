@@ -63,7 +63,7 @@ function updateOnlineUsers(room_members) {
 	room_members.forEach(function(member) {
 		console.log(member);
 		users_html += "<li class='user-block'><div style='display: inline-block'><svg height='20' width='20'><circle cx='10' cy='10' r='10' stroke-width='0' fill='" + member.color_code + "'/></svg></svg></div>";
-		users_html += "<div style='display: inline-block; text-align: center; margin-left: 10px'><p style='line-height: 75%'>" + member.username + "<br><br><span style='font-size: 10px;'>" + member.language + "</span></p></div></li>"
+		users_html += "<div style='display: inline-block; text-align: center; margin-left: 10px'><p style='line-height: 50%'>" + member.username + "<br><br><span style='font-size: 10px;'>" + member.language + "</span></p></div></li>"
 	});
 
 	$("#online-users ul").html(users_html);

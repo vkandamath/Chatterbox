@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chatlingual</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+   <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+
+    <script src="/js/jscolor.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chatroom.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+  </head>
+  <script>
+    // initialized here since param cannot be accessed outside ejs file
+    var room_id = "<%= room_id %>";
+    var username = "<%= my_nickname %>";
+    var my_language = "<%= my_language %>";
+    var on_connect_context = "<%= on_connect_context %>"
+
+    console.log(username)
+
+  </script>
+
+  <body>
+
+    <div>
+  <!-- navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid" id="navbar-container">
+        <div class="navbar-header">
+          <div class="navbar-brand">
+            ChatLingual
+          </div>
+        </div>
+
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
+            <input type="text" class="form-control" readonly id="current-url">
+            <button type="button" class="form-control" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
+          </div>
+        </form>
+
+        <form class="navbar-form navbar-right">
+          <div class="form-control" id="chatroom-nickname"></div>
+          <div class="form-control" id="chatroom-language"></div>
+        </form>
+
+      </div>
+    </nav>
+
+    <div id="contents-wrapper">
+      <div id="sidebar" style="overflow-y: auto;">
+        <div id="online-users">
+          <ul>
+          </ul>
+        </div>
+      </div>
+
+      <div id="main-content">
+        <div id="messages">
+
+        </div>
+
+        <div id="user-is-typing">
+        </div>
+        <div class="input-group" id="enter-message-input-group">
+          <input type="text" class="form-control" id="enter-message" style="height: 40px;" placeholder="Start typing!">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" onclick="sendMessage()" id="send-message-btn" style="height: 40px">Send</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal" id="new-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1>Welcome to <span style="color: #1FC659">ChatLingual!</span></h1>
+              <h3>A multilingual group chat</h3>
+            </div>
+            <div class="modal-body">
+              <form id="modal-form">
+                <span style="margin-bottom: 10px;">Enter a nickname and select a language to join.</span><br>
+                <div class="form-group" id="modal-nickname-form-group">
+                  <input type="text" name="nickname" id="modal-nickname" class="form-control" maxlength="22" placeholder="Nickname" style="margin-bottom: 10px; margin-top: 10px;">
+                </div>
+               
+                <div class="form-group" id="modal-language-form-group">
+                  <select class="form-control" name="language" id="modal-lang" style="margin-bottom: 10px;">
+                    <option value="" disabled selected>Language</option>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                  </select>
+                </div>
+                <button type="button" class="form-control" value="Join Chat" id="join-chat-btn">Join Chat</button>
+                <div id="login-errors" class=""></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
+    

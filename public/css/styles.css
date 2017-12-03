@@ -1,80 +1,320 @@
+/* 
+  Turquoise green: #1FC585;
+  Indigo: #272834;
+  Light blue: #209BC5;
+  Light green: #1FC659;
+  1db954
+*/
+
 body {
-  overflow-x: hidden;
+  font-family: "Righteous", "Helvetica"
 }
-/*
-.navbar-brand {
+
+.jumbotron {
+  margin-bottom: 0;
+}
+
+.background {
   position: absolute;
-  width: 100%;
+  background-image: url(/img/map.jpeg);
+  background-size: cover;
+  top: 0;
   left: 0;
-  text-align: center;
-}*/
-
-#wrapper {
-  text-align: center;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
+
+.overlay {
+  position: absolute;;
+  background-color: #272834;
+  opacity: 0.85;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.vertical-fluid {
+
+  background-color: transparent;
+
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+}
+
+
+
+#registration-form {
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: white;
+  position: inline;
+  height: 100%;
+}
+
+#registration-form > div {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #1FC659;
+}
+
+#create-chatroom-btn {
+  width: 100%;
+  background-color: #1FC659;
+  border: solid 1px #1FC659;
+  border-radius: 0px;
+}
+
+.form-control {
+  border: solid 1px #1FC659;
+  border-radius: 0px;
+}
+
+
+#registration-container {
+
+}
+
+#description-container {
+  color: white;
+}
+
+#description-container > p {
+  font-weight: 1;
+}
+
+input {
+  color: #999999
+}
+
+
+
+
+.form-group {
+
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: transparent;
+  color: #1FC659;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  border-top: #505050 solid 1px;
+}
+
+/* Chatroom */
+.navbar-default {
+  margin-bottom: 0px;
+  border: none;
+  background-color: #FFFFFF;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover {
+  color: white;
+  background-color: #1FC659;
+  width: 200px;
+  text-align: center;
+  font-family: "Righteous";
+  font-size: 24px;
+}
+
+#chatroom-language {
+  background-color: #1FC659;
+  color: white;
+  text-align-last: center;
+}
+
+
+#sidebar {
+  position: fixed;
+  top: 50px;  
+  height: calc(100vh - 40px);
+  background-color: #272834;
+  width: 200px;
+  padding: 10px;
+  word-wrap: break-word;
+  color: white;
+
+}
+
+#main-content {
+  position: fixed;
+  top: 50px;
+  margin-left: 200px;
+  padding: 0px;
+  background-color: #E9EDF2;
+  height: calc(100vh - 90px);
+  width: calc(100vw - 200px);
+}
+
+#user-is-typing {
+  position: fixed;
+  width: calc(100vw - 200px);
+  bottom: 40px;
+  right: 0;
+  padding-left: 20px;
+}
+
+#enter-message-input-group {
+  position: fixed;
+  width: calc(100vw - 200px);
+  bottom: 0;
+  right: 0;
+}
+
+#enter-message {
+  border: none;
+}
+
+
+#online-users ul {
+
+  list-style-type: none;
+  padding: 0;
+
+}
+
+#online-users ul li {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 #messages {
-  height: 509px;
+  padding: 25px;
   overflow-y: auto;
-  position: relative;
+  height: 100%;
 }
 
-#usersOnline {
-  height: 550px;
-  overflow-y: auto;
+#send-message-btn {
+  border-radius: 0px;
+  border: none;
+  background-color: #1FC659;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 
-#messages ul, #usersOnline ul {
-  list-style: none;
-  padding-left: 0;
+#send-message-btn:hover {
+  background-color: #15843c;
 }
 
-#userInput {
-  margin-top: 10px;
-}
-#messages-container {
-  padding-right: 0px;
+.log-event {
+  text-align: center;
+  color: #8f9dbd;
 }
 
-
-.fill {
-  position: relative;
+.message-bubble {
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  border-radius: 50px;
 }
 
+#join-chat-btn {
+  background-color: #1FC659;
+  color: white;
+}
 
-#footer {
-  margin-top: 30px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  background-color: #f5f5f5;
+.modal-dialog {
   text-align: center;
 }
 
-.navbar-brand a{
-  color: #337AB7;
+.modal-content {
+  border-radius: 0px;
+}
+ 
+#modal-lang {
+  -webkit-appearance: none;
+  border-radius: none;
 }
 
-.navbar-brand a:hover{
-  text-decoration: none;
+.modal-backdrop {
+  opacity: 0.8;
 }
 
-.navbar-brand span{
-  top: 0.15em;
-  color: #337AB7;;
+#copy-link-btn {
+  color: #1FC659;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
 }
 
-#color-picker {
-  text-align: center;
-  border-radius: 2px; 
-  border: none; 
-  padding: 5px 5px 5px 5px;
-  margin-left: 3px;
+#copy-link-btn:hover {
+  background-color: #1FC659;
+  color: white;
 }
 
-.img-thumbnail {
-  height: 50%;
-  width: 50%;
+#chatroom-nickname {
+  color: #1FC659;
 }
 
-#messages p {
-  display: inline;
+#language-input {
+  -webkit-appearance: none;
+  border-radius: none;
+}
+
+#msg-hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.user-block span{
+  color: #636883;
+}
+
+.alert {
+  border-radius: 0px;
+}
+
+@media only screen and (max-width: 768px) {
+  #sidebar {
+    display: none;
+  }
+  #main-content {
+    margin-left: 0;
+    width: 100vw;
+  }
+  .input-group {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+  #enter-message-input-group {
+    width: inherit;
+  }
+  .navbar-form {
+    margin-top: 0;
+    margin-bottom: 0;
+    display: none;
+  }
+  .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
+    width: 100vw;
+  }
+
+  #description-container {
+    text-align: center;
+  }
+
+  #registration-form > div {
+    text-align: center;
+  }
+
+  .footer {
+    display: none;
+  }
 }

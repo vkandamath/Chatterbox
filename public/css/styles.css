@@ -259,14 +259,18 @@ input {
 }
 
 #copy-link-btn {
-  color: #1FC659;
+  border-radius: 0px; 
+  background-color: #1FC659; 
+  border-color: #1FC659; 
+  color: white;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
 
 #copy-link-btn:hover {
-  background-color: #1FC659;
-  color: white;
+  background-color: white;
+  border-color: #1FC659;
+  color: #1FC659;
 }
 
 #chatroom-nickname {
@@ -289,6 +293,20 @@ input {
 
 .alert {
   border-radius: 0px;
+}
+
+#share-room-btn {
+  background-color: #15843c;
+  border-color: #15843c;
+  color: white;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+#share-room-btn:hover {
+  background-color: white;
+  border-color: #15843c;
+  color: #15843c;
 }
 
 @media only screen and (max-width: 768px) {

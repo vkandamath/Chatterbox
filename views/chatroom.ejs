@@ -25,6 +25,7 @@
     var username = "<%= my_nickname %>";
     var my_language = "<%= my_language %>";
     var on_connect_context = "<%= on_connect_context %>"
+    var bitly_url = "<%= bitly_url %>"
 
     console.log(username)
 
@@ -44,10 +45,17 @@
 
         <form class="navbar-form navbar-left">
           <div class="form-group">
+            <button type="button" class="form-control" id="share-room-btn">Share</button>
+          </div>
+        </form>
+
+        <!--
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
             <input type="text" class="form-control" readonly id="current-url">
             <button type="button" class="form-control" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
           </div>
-        </form>
+        </form>-->
 
         <form class="navbar-form navbar-right">
           <div class="form-control" id="chatroom-nickname"></div>
@@ -77,6 +85,26 @@
           <span class="input-group-btn">
             <button class="btn btn-primary" onclick="sendMessage()" id="send-message-btn" style="height: 40px">Send</button>
           </span>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal" id="share-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 style="color: #1FC659">Share</span></h1>
+              <h3>Copy the bitly below and share with friends!</h3>
+            </div>
+            <div class="modal-body">
+              <div class="input-group">
+                <input type="text" id="bitly-link" class="form-control" readonly>
+                <span class="input-group-btn">
+                  <button class="btn btn-default" id="copy-link-btn" type="button" data-clipboard-target="#bitly-link">Copy Link</button>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

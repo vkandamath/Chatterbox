@@ -50,7 +50,8 @@ var chatroomSchema = Schema({
 	    'default': shortid.generate
 	},
 	members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-	log_messages: [{type: String}]
+	log_messages: [{type: String}],
+	bitly_url: String
 })
 
 // Defining data models
@@ -129,13 +130,32 @@ app.get('/room', function (req, res, next) {
 			console.log("Dasd: " + req.param('nickname'))
 
 			var newChatroom = Chatroom()
-			newChatroom.save(function (err) {
+
+			// Generating bitly here upon room creation to ensure bitly api is only called once per chatroom (caching)
+			var chatroom_url = 'https://chatlingual10.herokuapp.com/room/' + newChatroom._id
+			var bitly_url = "https://api-ssl.bitly.com/v3/shorten?access_token=" + process.env.BITLY_ACCESS_TOKEN + "&longUrl=" + chatroom_url
+			console.log(bitly_url)
+			request(bitly_url, function(err, response, body) {
 				if (err) {
 					console.log(err)
-					res.send("Error creating chatroom!")
+				}
+				else if (response.statusCode == 200) {
+					body = JSON.parse(body)
+					var shortened_url = body["data"]["url"]
+					newChatroom.bitly_url = shortened_url
+
+					newChatroom.save(function (err) {
+						if (err) {
+							console.log(err)
+							res.send("Error creating chatroom!")
+						}
+						else {
+							res.redirect("/room/" + newChatroom._id)
+						}
+					})
 				}
 				else {
-					res.redirect("/room/" + newChatroom._id)
+					console.log("ERROR: bad response")
 				}
 			})
 		}
@@ -165,11 +185,11 @@ app.get('/room/:room_id', function (req, res) {
 				else {
 
 					if (my_nickname == null) // new joiner
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "user joins room for first time"})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "user joins room for first time",})
 					else if (req.session.creating_room) // creating new room
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "user creating new room"})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "user creating new room"})
 					else //existing users
-						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, on_connect_context: "existing user opens new tab"})
+						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "existing user opens new tab"})
 				}
 			}
 		})

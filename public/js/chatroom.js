@@ -72,6 +72,12 @@ function updateOnlineUsers(room_members) {
 
 window.onload = function() {
 
+	$("#bitly-link").val(bitly_url);
+
+	$("#share-room-btn").click(function() {
+		$("#share-room-modal").modal()
+	})
+
 
 	$("#chatroom-nickname").html(username)
 	$("#chatroom-language").html(my_language)

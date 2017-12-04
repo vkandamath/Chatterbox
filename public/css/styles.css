@@ -10,6 +10,10 @@ body {
   font-family: "Righteous", "Helvetica"
 }
 
+.glyphicon-heart {
+  color: #15843c;
+}
+
 .jumbotron {
   margin-bottom: 0;
 }
@@ -168,13 +172,18 @@ input {
 
 #enter-message-input-group {
   position: fixed;
-  width: calc(100vw - 200px);
   bottom: 0;
-  right: 0;
+  left: 200;
+  right: 60;
+}
+
+.input-group-btn {
+  padding-left: 0px;
 }
 
 #enter-message {
   border: none;
+  width: calc(100vw - 200px - 60px);
 }
 
 
@@ -205,6 +214,7 @@ input {
   position: fixed;
   bottom: 0;
   right: 0;
+  width: 60px;
 }
 
 #send-message-btn:hover {
@@ -290,12 +300,18 @@ input {
     width: 100vw;
   }
   .input-group {
+    position: fixed;
     width: 100%;
     left: 0;
     right: 0;
   }
   #enter-message-input-group {
-    width: inherit;
+    left: 0;
+    right: 60px;
+  }
+
+  #enter-message {
+    width: calc(100vw - 60px);
   }
   .navbar-form {
     margin-top: 0;

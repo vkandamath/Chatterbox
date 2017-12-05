@@ -6,37 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chatlingual</title>
 
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+    <link rel="icon" type="image/x-icon" href="/img/flavicon-rounded.ico">
+    <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-     <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
-
-    <script src="/js/jscolor.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chatroom.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
-     <link rel="icon" type="image/x-icon" href="/img/flavicon-rounded.ico">
   </head>
+
   <script>
-    // initialized here since param cannot be accessed outside ejs file
+    /* Initialized vars here since cannot ejs tags cannot be used in js file */
     var room_id = "<%= room_id %>";
     var username = "<%= my_nickname %>";
     var my_language = "<%= my_language %>";
     var on_connect_context = "<%= on_connect_context %>"
     var bitly_url = "<%= bitly_url %>"
 
-    console.log(username)
-
   </script>
 
   <body>
 
-    <div>
-  <!-- navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid" id="navbar-container">
         <div class="navbar-header">
@@ -51,14 +46,6 @@
           </div>
         </form>
 
-        <!--
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <input type="text" class="form-control" readonly id="current-url">
-            <button type="button" class="form-control" id="copy-link-btn" data-clipboard-target="#current-url">Copy Link</button>
-          </div>
-        </form>-->
-
         <form class="navbar-form navbar-right">
           <div class="form-control" id="chatroom-nickname"></div>
           <div class="form-control" id="chatroom-language"></div>
@@ -71,17 +58,16 @@
       <div id="sidebar" style="overflow-y: auto;">
         <div id="online-users">
           <ul>
+            <!-- ul will be populated by li tags dynamically -->
           </ul>
         </div>
       </div>
 
       <div id="main-content">
-        <div id="messages">
+        <div id="messages"></div>
 
-        </div>
+        <div id="user-is-typing"></div>
 
-        <div id="user-is-typing">
-        </div>
         <div class="input-group" id="enter-message-input-group">
           <input type="text" class="form-control" id="enter-message" style="height: 40px;" placeholder="Start typing!">
           <span class="input-group-btn">
@@ -90,7 +76,6 @@
         </div>
       </div>
 
-      <!-- Modal -->
       <div class="modal" id="share-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -110,7 +95,6 @@
         </div>
       </div>
 
-      <!-- Modal -->
       <div class="modal" id="new-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">

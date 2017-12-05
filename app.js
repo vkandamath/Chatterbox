@@ -8,15 +8,9 @@ var express = require('express'),
 	multer = require('multer'),
 	upload = multer()
 	fs = require('fs'),
-	request = require('request')
-
-	var shortid = require('shortid');
-
-var ios = require('socket.io-express-session');
-
-var languages = {"English": true, "Spanish": true, "French": true}
-
-
+	request = require('request'),
+	shortid = require('shortid'),
+	ios = require('socket.io-express-session');
 
 // Mongodb setup
 var mongoUri = process.env.MONGOLAB_URI
@@ -25,17 +19,17 @@ mongoose.connect(mongoUri, {useMongoClient: true}, function (err, res) {
 		console.log ('ERROR connecting to: ' + mongoUri + '. ' + err)
 	} 
 	else {
-		// Drop the current database
+		// Drops existing database every time app is started
 		mongoose.connection.db.dropDatabase()
 	}
 })
 
-// Defining schemas
+// Defining schemas for readability
 var Schema = mongoose.Schema
 
+/* NOTE: Assume socket_id is not unique since same socket id can be regenerated 
+between previously disconnected user and newly connected user */
 var userShema = Schema({
-	// Assume socket_id is not unique since same socket id can be regenerated 
-	// between previouslydisconnected user and newly connected user
 	socket_id: String, 
 	username: String,
 	language: String,
@@ -54,10 +48,9 @@ var chatroomSchema = Schema({
 	bitly_url: String
 })
 
-// Defining data models
+// Defining data models using schemeas
 var User = mongoose.model('User', userShema)
 var Chatroom = mongoose.model('Chatroom', chatroomSchema)
-
 
 // Language codes
 var lang_codes = {
@@ -68,12 +61,14 @@ var lang_codes = {
 	Spanish: "es",
 }
 
+// Enables user sessions
 var session = require("express-session")({
     secret: "my-secret",
     resave: true,
     saveUninitialized: true
 })
 
+// Integrates session with socket.io
 io.use(ios(session));
 
 // Server configuration
@@ -94,10 +89,9 @@ app.get("*", function (req, res, next) {
     	res.redirect('https://' + process.env.HOSTNAME + req.url)
     else
     	next()
-
 })
 
-// Presents user with homepage
+// Present user with homepage
 app.get('/', function (req, res) {
 	res.render('welcome', {error_msg: "", field: "", nickname: ""})
 })
@@ -105,71 +99,55 @@ app.get('/', function (req, res) {
 // Create new chatroom and redirects user
 app.get('/room', function (req, res, next) {
 
-	//console.log("here: " + req.header('Referer'))
-	//console.log((process.env.HOSTNAME + "/"))
+	if (!req.param('nickname')) {
+		res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input", nickname: ""})
+	}
+	else if (!lang_codes[req.param('language')]) {
+		res.render('welcome', {error_msg: "Language is invalid!", field: "language-input", nickname: req.param('nickname')})
+	}
+	else {
+		req.session.my_nickname = req.param('nickname')
+		req.session.my_language = req.param('language')
+		req.session.creating_room = true
 
-	// To prevent direct url access 
-	//if (req.header('Referer') != (process.env.HOSTNAME + "/")) {
-		//console.log("SD")
-		//res.redirect('/')
-	//} 
-	//else {
-		//TODO: use this later
-		// input validation
-		if (!req.param('nickname')) {
-			res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input", nickname: ""})
-		}
-		else if (!languages[req.param('language')]) {
-			res.render('welcome', {error_msg: "Language is invalid!", field: "language-input", nickname: req.param('nickname')})
-		}
-		else {
-			req.session.my_nickname = req.param('nickname')
-			req.session.my_language = req.param('language')
-			req.session.creating_room = true
+		var newChatroom = Chatroom()
 
-			console.log("Dasd: " + req.param('nickname'))
+		// Generating bitly here upon room creation to ensure bitly api is only called once per chatroom
+		var chatroom_url = 'https://chatlingual10.herokuapp.com/room/' + newChatroom._id
+		var bitly_url = "https://api-ssl.bitly.com/v3/shorten?access_token=" + process.env.BITLY_ACCESS_TOKEN + "&longUrl=" + chatroom_url
 
-			var newChatroom = Chatroom()
+		request(bitly_url, function(err, response, body) {
+			if (err) {
+				console.log(err)
+			}
+			else if (response.statusCode == 200) {
+				body = JSON.parse(body)
+				var shortened_url = body["data"]["url"]
+				newChatroom.bitly_url = shortened_url
 
-			// Generating bitly here upon room creation to ensure bitly api is only called once per chatroom (caching)
-			var chatroom_url = 'https://chatlingual10.herokuapp.com/room/' + newChatroom._id
-			var bitly_url = "https://api-ssl.bitly.com/v3/shorten?access_token=" + process.env.BITLY_ACCESS_TOKEN + "&longUrl=" + chatroom_url
-			console.log(bitly_url)
-			request(bitly_url, function(err, response, body) {
-				if (err) {
-					console.log(err)
-				}
-				else if (response.statusCode == 200) {
-					body = JSON.parse(body)
-					var shortened_url = body["data"]["url"]
-					newChatroom.bitly_url = shortened_url
-
-					newChatroom.save(function (err) {
-						if (err) {
-							console.log(err)
-							res.send("Error creating chatroom!")
-						}
-						else {
-							res.redirect("/room/" + newChatroom._id)
-						}
-					})
-				}
-				else {
-					console.log("ERROR: bad response")
-				}
-			})
-		}
-	//}
+				newChatroom.save(function (err) {
+					if (err) {
+						console.log(err)
+						res.send("Error creating chatroom!")
+					}
+					else {
+						res.redirect("/room/" + newChatroom._id)
+					}
+				})
+			}
+			else {
+				console.log("ERROR: bad response")
+			}
+		})
+	}
 })
 
 // Renders chatroom with room_id to user
 app.get('/room/:room_id', function (req, res) {
 
-
 	var room_id = req.params.room_id
 	var my_nickname = req.session.my_nickname
 	var my_language = req.session.my_language
-
 
 	Chatroom
 		.findById(room_id)
@@ -180,15 +158,18 @@ app.get('/room/:room_id', function (req, res) {
 				res.redirect('/')
 			}
 			else {
-				if (chatroom == null) //chatroom doesn't exist
+				//chatroom doesn't exist
+				if (chatroom == null) 
 					res.redirect('/')
 				else {
-
-					if (my_nickname == null) // new joiner
+					// new joiner
+					if (my_nickname == null)
 						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "user joins room for first time",})
-					else if (req.session.creating_room) // creating new room
+					// creating new room
+					else if (req.session.creating_room)
 						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "user creating new room"})
-					else //existing users
+					//existing users
+					else
 						res.render('chatroom', {room_id: room_id, my_nickname: my_nickname, my_language: my_language, bitly_url: chatroom.bitly_url, on_connect_context: "existing user opens new tab"})
 				}
 			}
@@ -202,7 +183,7 @@ app.get('/*', function (req, res) {
 	res.redirect('/')
 })
 
-
+// Socket connection
 io.on('connection', function(socket) { 
 
 	var room_id
@@ -210,13 +191,6 @@ io.on('connection', function(socket) {
 	socket.emit("sessiondata", socket.handshake.session)
 
 	socket.on('joined room', function(msg) {
-
-		//socket.handshake.session.socket_id = socket.id;
-        //socket.handshake.session.save();
-
-        console.log(socket.id)
-        console.log(socket.handshake.session);
-        console.log("===========================")
 
 		var user_selected_username = true;
 		
@@ -255,16 +229,19 @@ io.on('connection', function(socket) {
 								else {
 									socket.join(room_id)
 
+									// Retrieve chat history for new user
 									const HISTORY_SIZE_LIMIT = 100;
 									var history = chatroom.log_messages
 
 									if (history.length > 100) {
 										history = chatroom.log_messages[history.length - HISTORY_SIZE_LIMIT]
 									}
+
 									socket.emit("display chat history", {history: history})
 
 									// Sending to everyone including sender
-									io.in(room_id).emit("user joined room", {socket_id: socket.id, username: new_user.username, color_code: msg.color_code, room_id: room_id, room_members: chatroom.members})
+									io.in(room_id).emit("user joined room", {socket_id: socket.id, username: new_user.username, 
+										color_code: msg.color_code, room_id: room_id, room_members: chatroom.members})
 								}
 							}) 
 						}
@@ -294,7 +271,7 @@ io.on('connection', function(socket) {
 							socket.broadcast.to(msg.room_id).emit('incoming message', msg)
 						})
 					}
-				});
+				})
 			}
 		})
 	})
@@ -328,16 +305,15 @@ io.on('connection', function(socket) {
 				})
 			}
 		})
-
 	})
 
 	socket.on('set user properties', function(msg) {
 
-		// server side form validation
+		// Server side form validation
 		if (!msg.nickname) {
 			socket.emit("could not set new user properties", {error: "Nickname is required!", field: "modal-nickname"})
 		}
-		else if (!languages[msg.language]){
+		else if (!lang_codes[msg.language]){
 			socket.emit("could not set new user properties", {error: "Language is invalid!", field: "modal-language"})
 		}
 		else {
@@ -370,13 +346,12 @@ io.on('connection', function(socket) {
 						})
 					})
 				}
-			});
+			})
 		}
 	})
 
 	socket.on('user is typing', function(msg) {
-
-		//sends to everyone except the user who is typing
+		// Sends to everyone except the user who is typing
 		socket.to(room_id).emit('user is typing', msg)
 	})
 
@@ -398,133 +373,20 @@ io.on('connection', function(socket) {
 						console.log(err)
 					}
 					else if (user != null) {
-
-						//if (chatroom.members.length == 1) {
-						//	chatroom.remove()
-						//}
-						//else {
-							chatroom.members.pull(user)
-							chatroom.save(function (err) {
-								if (err) {
-									console.log(err)
-								}
-								else {
-									io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
-								}
-							})
-						//}
-
+						chatroom.members.pull(user)
+						chatroom.save(function (err) {
+							if (err) {
+								console.log(err)
+							}
+							else {
+								io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
+							}
+						})
 					}
 				})
 			}
 		})
 	})
-
-/*
-
-		User.findOne({ 'socket_id': socket.id }, function (err, user) {
-			if (err) {
-				console.log(err)
-			}
-			else {
-				Chatroom.findById(room_id).
-				populate('members').
-				exec(function (err, chatroom) {
-					if (err) {
-						console.log(err)
-					}
-					else {
-						User.findOne({ 'socket_id' : socket.id }, function (err, user) {
-							if (err) {
-								console.log(err)
-							}
-							else if chatroom != null {
-								// if last member leaves, delete chatroom						
-								if (chatroom.members.length == 1) {
-									// TODO: remove any references to chatroom (users, msgs..)
-									chatroom.remove()
-								}	
-								else {
-
-									// TODO: set User.chatroom field to null if necessary later
-									// removes user from chatroom list of members when they leave room
-									// still maintains user object and messages corresponding to user 
-									// in case its still needed for maintaining chat history later
-									chatroom.members.pull(user)
-									chatroom.save(function (err) {
-										if (err) {
-											console.log(err)
-										}
-										else {
-											io.in(room_id).emit('user left room', {socket_id: socket.id, username: user.username, room_id: room_id, room_members: chatroom.members})
-										}
-									})
-
-								}
-								
-
-							}
-						})
-
-					}
-				})
-
-			*/
-
-				//hatroom.update({_id: chatroom})
-/*
-				console.log('User ' + usersOnline[socket.id].username + ' disconnected!')
-				var username = usersOnline[socket.id].username
-				if (username == "") {
-					username = socket.id
-				}
-				delete usersOnline[socket.id]
-				io.emit('disconnected', {userid: username, usersOnline: usersOnline})*/
-			
-
-	//var colorCode = generateColorCode()
-
-	//io.emit('connected', {userid: socket.id, usersOnline: usersOnline})
-
-	/*
-
-	socket.emit('myUserId', {userId: socket.id, colorCode: colorCode})
-
-
-
-
-
-	socket.on('user is typing', function(msg) {
-		console.log('user is typing')
-
-		//sends to everyone except the user who is typing
-		socket.broadcast.emit('user is typing', msg)
-	})
-
-	socket.on('user is not typing', function(msg) {
-		console.log('user is not typing')
-		socket.broadcast.emit('user is not typing', msg)
-	})
-
-	socket.on('username change', function(msg) {
-		if (usersOnline[msg.socketId].username != msg.newUsername) {
-			usersOnline[msg.socketId].username = msg.newUsername
-			msg['usersOnline'] = usersOnline
-			io.emit('username change', msg)
-		}
-	})
-
-	socket.on('change color', function(msg) {
-		console.log("Changing color to: " + msg.colorHex)
-		usersOnline[msg.socketid].colorCode = "#" + msg.colorHex
-		msg['usersOnline'] = usersOnline
-		io.emit('change color', msg)
-	})
-
-	socket.on('outgoing image', function(msg) {
-		console.log('sending out image: ' + msg.imageData)
-		socket.broadcast.emit('incoming image', msg)
-	}) */
 })
 
 

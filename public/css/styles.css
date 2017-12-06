@@ -164,7 +164,7 @@ input {
  
 #enter-message {
   border: none;
-  width: calc(100vw - 200px - 60px);
+  width: calc(100vw - 200px - 50px);
 }
  
 #online-users ul {
@@ -192,7 +192,7 @@ input {
   position: fixed;
   right: 0;
   transition: all 0.3s ease 0s;
-  width: 60px;
+  width: 50px;
 }
  
 #send-message-btn:hover {

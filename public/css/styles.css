@@ -250,6 +250,7 @@ input {
  
 #chatroom-nickname {
   color: #1FC659;
+  border-left: none;
 }
  
 #language-input {
@@ -282,6 +283,14 @@ input {
   background-color: white;
   border-color: #15843c;
   color: #15843c;
+}
+
+#user-icon {
+  border: 1px #15843c solid;
+  border-right: #15843c;
+  border-radius: 0px;
+  background-color: #15843c;
+  color: white;
 }
  
 /* ------------------------- Mobile View ------------------------- */

@@ -2,16 +2,16 @@ var socket = io()
 
 var color_code
 
-function generateColorCode() {
-	var allValues = "ABCDEF1234567890"
-	var colorCode = "#"
+// Generates random color in HSL
+function generateColorHSL() {
 
-	for (var i = 0; i < 6; i++) {
-		var index = Math.floor(Math.random()*allValues.length)
-    	colorCode += allValues[index]
-	}
+	var h = Math.floor(Math.random() * 360)
+	var s = Math.floor(Math.random() * 50 + 50)
+	var l = Math.floor(Math.random() * 60)
 
-  	return colorCode
+	var hsl = "hsl(" + h + ", " + s + "%, " + l + "%)"
+
+	return hsl
 }
 
 function appendMessage(username, message, color_code, is_my_message) {
@@ -112,13 +112,10 @@ $(document).ready(function() {
 
 	if (on_connect_context == "user joins room for first time") {
 		$("#new-user-modal").modal({backdrop: 'static', keyboard: false})
-		color_code  = generateColorCode()
-		socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code})
 	}
-	else {
-		color_code  = generateColorCode()
-		socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code})
-	}
+	
+	color_code  = generateColorHSL()
+	socket.emit("joined room", {room_id: room_id, username: username, my_language: my_language, color_code: color_code})
 
 	$("#enter-message").keypress(function (e) {
 		const ENTER_KEY_CODE = 13

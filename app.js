@@ -5,8 +5,6 @@ var express = require('express'),
 	io = require('socket.io')(server),
 	mongoose = require ("mongoose"),
 	bodyParser = require('body-parser'),
-	multer = require('multer'),
-	upload = multer()
 	fs = require('fs'),
 	request = require('request'),
 	shortid = require('shortid'),
@@ -174,8 +172,6 @@ app.get('/room/:room_id', function (req, res) {
 				}
 			}
 		})
-
-
 })
 
 // Redirects user to homepage if they try to access something else

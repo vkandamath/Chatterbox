@@ -25,7 +25,7 @@ function appendMessage(username, message, color_code, is_my_message) {
 		message_bubble += " float: left;'"
 	}
 
-	message_bubble += ">" + message + "<hr id='msg-hr'><span style='font-size: 10px'>" + username + "</span></div><br><br><br><br>"
+	message_bubble += ">" + message + "<hr class='msg-hr'><span style='font-size: 10px'>" + username + "</span></div><br><br><br><br>"
 
 	$("#messages").append(message_bubble)
 	$("#messages")[0].scrollTop = $("#messages")[0].scrollHeight

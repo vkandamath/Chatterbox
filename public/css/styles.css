@@ -257,7 +257,7 @@ input {
   border-radius: none;
 }
  
-#msg-hr {
+.msg-hr {
   margin-bottom: 0;
   margin-top: 0;
 }

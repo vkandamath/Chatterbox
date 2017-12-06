@@ -260,7 +260,7 @@ io.on('connection', function(socket) {
 					}
 					else {
 						chatroom.log_messages.push("<div class='message-bubble' style='background-color: " + msg.color_code + "; float: left;'>" 
-							+ msg.message + "<hr id='msg-hr'><span style='font-size 10px'>" + user.username + "</span></div><br><br><br><br>")
+							+ msg.message + "<hr class='msg-hr'><span style='font-size: 10px'>" + user.username + "</span></div><br><br><br><br>")
 						chatroom.save(function(err) {
 							msg.language = user.language
 							msg.username = user.username

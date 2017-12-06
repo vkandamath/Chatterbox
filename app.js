@@ -95,7 +95,7 @@ app.get('/', function (req, res) {
 })
 
 // Create new chatroom and redirects user
-app.get('/room', function (req, res, next) {
+app.post('/room', function (req, res, next) {
 
 	if (!req.param('nickname')) {
 		res.render('welcome', {error_msg: "Nickname is required!", field: "nickname-input", nickname: ""})

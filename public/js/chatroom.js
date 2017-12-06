@@ -60,7 +60,6 @@ function updateOnlineUsers(room_members) {
 	var users_html = ""
 
 	room_members.forEach(function(member) {
-		console.log(member)
 		users_html += "<li class='user-block'><div style='display: inline-block'><svg height='20' width='20'><circle cx='10' cy='10' r='10' stroke-width='0' fill='" + member.color_code + "'/></svg></svg></div>"
 		users_html += "<div style='display: inline-block; text-align: center; margin-left: 10px'><p style='line-height: 50%'>" + member.username + "<br><br><span style='font-size: 10px;'>" + member.language + "</span></p></div></li>"
 	})
@@ -166,7 +165,6 @@ $(document).ready(function() {
 	})
 
 	socket.on('could not set new user properties', function(msg) {
-		console.log("could not set new user properties")
 		$("#" + msg.field + "-form-group").addClass("has-error")
 		$("#login-errors").addClass("alert")
         $("#login-errors").addClass("alert-danger")

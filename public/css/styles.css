@@ -6,7 +6,7 @@
 
 /* ------------------------- Chatroom ------------------------- */
 body {
-  font-family: "Righteous", "Helvetica"
+  font-family: "Helvetica"
 }
  
 .glyphicon-heart {
@@ -76,6 +76,10 @@ body {
 #description-container {
   color: white;
 }
+
+#description-container > h1 {
+  font-family: "Righteous"
+}
  
 #description-container > p {
   font-weight: 1;
@@ -115,12 +119,7 @@ input {
   text-align: center;
   width: 200px;
 }
- 
-#chatroom-language {
-  background-color: #1FC659;
-  color: white;
-  text-align-last: center;
-}
+
  
 #sidebar {
   background-color: #272834;
@@ -138,8 +137,6 @@ input {
   height: calc(100vh - 90px);
   margin-left: 200px;
   padding: 0px;
-  position: fixed;
-  top: 50px;
   width: calc(100vw - 200px);
 }
  
@@ -248,11 +245,6 @@ input {
   color: #1FC659;
 }
  
-#chatroom-nickname {
-  color: #1FC659;
-  border-left: none;
-}
- 
 #language-input {
   -webkit-appearance: none;
   border-radius: none;
@@ -270,19 +262,14 @@ input {
 .alert {
   border-radius: 0px;
 }
- 
-#share-room-btn {
-  -webkit-transition: all 0.3s ease 0s;
-  background-color: #15843c;
-  border-color: #15843c;
-  color: white;
-  transition: all 0.3s ease 0s;
+
+#chatroom-nickname {
+  margin-left: 0px;
+  border-left: none;
 }
- 
-#share-room-btn:hover {
-  background-color: white;
-  border-color: #15843c;
-  color: #15843c;
+
+#chatroom-nickname-li {
+  margin-right: 15px;
 }
 
 #user-icon {
@@ -291,6 +278,36 @@ input {
   border-radius: 0px;
   background-color: #15843c;
   color: white;
+  height: 34px;
+}
+
+#user-icon-a {
+  padding-right: 0px;
+}
+
+#share-room-btn {
+  -webkit-transition: all 0.3s ease 0s;
+  background-color: #15843c;
+  border-color: #15843c;
+  color: white;
+  transition: all 0.3s ease 0s;
+  margin-left: 15px;
+  width: inherit;
+}
+
+#share-room-btn:hover {
+  background-color: white;
+  border-color: #15843c;
+  color: #15843c;
+}
+
+.glyphicon-share {
+  height: 34px;
+}
+
+#navbar-buttons {
+  padding-top: 8px;
+  padding-left: 0px;
 }
  
 /* ------------------------- Mobile View ------------------------- */
@@ -314,15 +331,7 @@ input {
   }
 
   #enter-message {
-    width: calc(100vw - 60px);
-  }
-  .navbar-form {
-    margin-top: 0;
-    margin-bottom: 0;
-    display: none;
-  }
-  .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
-    width: 100vw;
+    width: calc(100vw - 50px);
   }
 
   #description-container {
@@ -336,4 +345,20 @@ input {
   .footer {
     display: none;
   }
+
+  .navbar-brand {
+    transform: translateX(-50%);
+    left: 50%;
+    position: absolute;
+  }
+
+  .navbar-default {
+    background-color: #1FC659;
+  }
+
+  #nav-toggle-btn:hover,
+  #nav-toggle-btn:focus {
+    background: none;
+  }
 }
+

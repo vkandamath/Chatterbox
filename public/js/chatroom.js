@@ -7,8 +7,8 @@ function generateColorHSL() {
 
 	var h = Math.floor(Math.random() * 360)
 	var s = Math.floor(Math.random() * 50 + 50)
-	var l = Math.floor(Math.random() * 60)
-
+	var l = 60
+	
 	var hsl = "hsl(" + h + ", " + s + "%, " + l + "%)"
 
 	return hsl
@@ -76,7 +76,7 @@ $(document).ready(function() {
 		$("#share-room-modal").modal()
 	})
 
-	$("#chatroom-nickname").html(username)
+	$("#chatroom-nickname").append(username)
 	$("#chatroom-language").html(my_language)
 
 	$("#join-chat-btn").click(function(){
@@ -154,7 +154,7 @@ $(document).ready(function() {
 	})
 
 	socket.on('set new user properties', function(msg) {
-		$("#messages").html("<p class='animated flash log-event'><strong>" + msg.new_username + "</strong> has joined the room.</p>")
+		$("#messages").append("<p class='animated flash log-event'><strong>" + msg.new_username + "</strong> has joined the room.</p>")
 		$("#chatroom-nickname").html(username)
 		$("#chatroom-language").html(my_language)
 		$("#new-user-modal").modal("hide")

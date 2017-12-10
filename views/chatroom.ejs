@@ -32,28 +32,38 @@
 
   <body>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid" id="navbar-container">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
         <div class="navbar-header">
-          <div class="navbar-brand">
-            ChatLingual
-          </div>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-buttons" style="border: none;" id="nav-toggle-btn">
+              <span class="icon-bar" style="background-color: white"></span>
+              <span class="icon-bar" style="background-color: white"></span>
+              <span class="icon-bar" style="background-color: white"></span>                       
+            </button>
+          <a class="navbar-brand" href="#">ChatLingual</a>
         </div>
-
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <button type="button" class="form-control" id="share-room-btn"><span class="glyphicon glyphicon-share"></span></button>
-          </div>
-        </form>
-
-        <form class="navbar-form navbar-right">
-          <div class="input-group">
-            <span class="input-group-addon" id="user-icon"><i class="glyphicon glyphicon-user"></i></span>
-            <div class="form-control" id="chatroom-nickname"></div>
-          </div>
-          <div class="form-control" id="chatroom-language"></div>
-        </form>
-
+        <div class="collapse navbar-collapse" id="navbar-buttons">
+          <ul class="nav navbar-nav">
+            <li><button type="button" class="form-control" id="share-room-btn"><span class="glyphicon glyphicon-share"></span></button></li>
+          </ul>
+          
+          <ul class="nav navbar-nav navbar-right">
+            <li><span class="input-group-addon" id="user-icon" style="width: 20px"><i class="glyphicon glyphicon-user"></i></span></li>
+            <li id="chatroom-nickname-li"><div class="form-control" id="chatroom-nickname">jnjkn</div></li>
+            <li><div class="form-control" id="chatroom-language">Spanish</div></li>
+          </ul>
+            <!--
+            <li>
+              <a id="user-icon-a">
+                <span class="input-group-addon" id="user-icon" style="width: 20px">
+                  <i class="glyphicon glyphicon-user"></i>
+                </span>
+              </a>
+            </li>-->
+            <!--<li><a id="chatroom-nickname-a"><div class="form-control" id="chatroom-nickname"></div></a></li>-->
+            
+     
+        </div>
       </div>
     </nav>
 

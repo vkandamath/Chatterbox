@@ -111,7 +111,8 @@ input {
 }
  
 .navbar-default .navbar-brand,
-.navbar-default .navbar-brand:hover {
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:active {
   background-color: #1FC659;
   color: white;
   font-family: "Righteous";

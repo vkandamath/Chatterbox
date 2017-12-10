@@ -8,7 +8,7 @@ function generateColorHSL() {
 	var h = Math.floor(Math.random() * 360)
 	var s = Math.floor(Math.random() * 50 + 50)
 	var l = 60
-	
+
 	var hsl = "hsl(" + h + ", " + s + "%, " + l + "%)"
 
 	return hsl

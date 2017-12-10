@@ -350,6 +350,7 @@ input {
     transform: translateX(-50%);
     left: 50%;
     position: absolute;
+    height: 48px;
   }
 
   .navbar-default {
@@ -359,6 +360,56 @@ input {
   #nav-toggle-btn:hover,
   #nav-toggle-btn:focus {
     background: none;
+  }
+
+  #navbar-buttons {
+    background-color: #272834;
+    border: none;
+    padding: 0
+  }
+
+  #share-room-btn {
+    margin: 0 auto;
+    background: none;
+    border: none;
+  }
+
+  #chatroom-nickname,
+  #chatroom-language {
+    border: none;
+    background: transparent;
+    text-align: center;
+    color: white;
+  }
+
+  #chatroom-nickname-li,
+  #chatroom-language-li {
+    margin: 0;
+    border-top: 1px solid #636883;
+  }
+
+  #user-icon-li {
+    display: none;
+  }
+
+  #navbar-right-ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  #navbar-left-ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  #navbar-left-ul li,
+  #navbar-right-ul li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .modal-body > .input-group {
+    position: inherit;
   }
 }
 

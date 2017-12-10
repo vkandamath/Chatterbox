@@ -1,5 +1,5 @@
 # ChatLingual
-Communication shouldn't have barriers. ChatLingual translated messages in real-time and lets you talk to anyone anywhere. Written in Node.js using Express.js.
+Communication shouldn't have barriers. ChatLingual translated messages in real-time and lets you talk to anyone anywhere. Written in Node.js using Express.js, Socket.io, and MongoDB.
 
 ## Try it out here
 https://chatlingual10.herokuapp.com/
